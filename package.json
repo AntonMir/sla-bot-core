@@ -1,0 +1,23 @@
+{
+  "name": "sla_bot_platform",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts | pino-pretty",
+    "prettify": "prettier --write .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pino": "^8.14.1",
+    "telegraf": "^4.12.2"
+  },
+  "devDependencies": {
+    "pino-pretty": "^10.0.0",
+    "prettier": "^2.8.8",
+    "ts-node": "^10.9.1"
+  }
+}
