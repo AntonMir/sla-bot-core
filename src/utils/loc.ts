@@ -9,7 +9,6 @@ const localeFormatter = (
     ctx: BotContext,
     bot: ISLABot
 ): string => {
-    /* @ts-ignore */
     const foundEntities = [...txt.matchAll(/\{([a-zA-Z_]*)\.([a-zA-Z_]*)}/g)];
     const entities = [];
     for (const rawEntity of foundEntities) {

@@ -49,12 +49,12 @@ interface ISLATextScreen extends ISLAScreenBase {
 
 interface ISLAImageScreen extends ISLAScreenBase {
     image: LocaleID;
-    caption: LocaleID;
+    caption?: LocaleID;
 }
 
 interface ISLAVideoScreen extends ISLAScreenBase {
     video: LocaleID;
-    caption: LocaleID;
+    caption?: LocaleID;
 }
 
 export interface ISLALocale {
