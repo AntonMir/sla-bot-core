@@ -1,13 +1,9 @@
 // Starter script
 
-import { setupBot } from './bot';
+import * as dotenv from 'dotenv'
+dotenv.config()
 import { sampleBot } from './sample';
-import pino from 'pino';
+import { botLauncher } from './launcher';
 
-export const logger = pino();
 
-(async () => {
-    await setupBot(sampleBot).launch({
-        allowedUpdates: ['message', 'callback_query'],
-    });
-})();
+botLauncher(sampleBot)

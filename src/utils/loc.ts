@@ -1,13 +1,15 @@
-import { BotContext } from '../botContext';
-import { ISLABot } from '../ts/ISLABot';
+import { BotContext } from '../context/botContext';
+import { ISLABot } from '../interfaces/ISLABot';
 
 const ResolvingErrorValue = '<b>*RESOLVING_ERROR*</b>';
 
+// TODO: изучить
 const localeFormatter = (
     txt: string,
     ctx: BotContext,
     bot: ISLABot
 ): string => {
+    /* @ts-ignore */
     const foundEntities = [...txt.matchAll(/\{([a-zA-Z_]*)\.([a-zA-Z_]*)}/g)];
     const entities = [];
     for (const rawEntity of foundEntities) {
@@ -41,6 +43,7 @@ const localeFormatter = (
     return resolvedText;
 };
 
+// TODO: изучить
 export const localeStorage = (bot: ISLABot) => {
     return (key: string, ctx: BotContext) => {
         const loc = bot.locale.find((el) => el.id === key);

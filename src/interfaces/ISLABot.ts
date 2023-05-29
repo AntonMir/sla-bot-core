@@ -8,19 +8,19 @@ export interface ISLABot {
     scripts?: ISLAScript[];
 }
 
-type ScenesLike = ISLABaseScene;
+export type ScenesLike = ISLABaseScene;
 
 export type ScreenLike = ISLATextScreen | ISLAImageScreen | ISLAVideoScreen;
 
 type BotID = string;
 
-type SceneID = string;
+export type SceneID = string;
 
 type ScreenID = string;
 
 type LocaleID = string;
 
-interface ISLAScript {
+export interface ISLAScript {
     id: string;
     script: string;
 }
@@ -57,7 +57,7 @@ interface ISLAVideoScreen extends ISLAScreenBase {
     caption: LocaleID;
 }
 
-interface ISLALocale {
+export interface ISLALocale {
     id: LocaleID;
     content: string;
     formatted?: boolean;

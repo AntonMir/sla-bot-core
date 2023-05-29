@@ -1,45 +1,16 @@
-import { ScreenLike } from './ts/ISLABot';
-import { Markup, Scenes, session, Telegraf } from 'telegraf';
-import { logger } from './index';
+import { Scenes, session, Telegraf } from 'telegraf';
+import { logger } from './utils/logger';
 import { localeStorage } from './utils/loc';
-import { ExtraReplyMessage } from 'telegraf/typings/telegram-types';
-import { BotContext } from './botContext';
-import { ISLABot } from './ts/ISLABot';
+import { BotContext } from './context/botContext';
+import { ISLABot } from './interfaces/ISLABot';
+import { botStart, enterScreen } from './utils/actions';
+import { botErrorCatcher } from './utils/helpers';
 
-const enterScreen = async (
-    screens: ScreenLike[],
-    screenId: string,
-    ctx: BotContext
-) => {
-    logger.info(`[${ctx.from.id}] enter screen ${screenId}`);
-    const screen = screens.find((sc) => sc.id === screenId);
-    if ('text' in screen) {
-        let extra: ExtraReplyMessage = {
-            parse_mode: 'HTML',
-        };
-        if ('buttons' in screen) {
-            extra = {
-                ...extra,
-                ...Markup.inlineKeyboard(
-                    screen.buttons.map((buttonRow) =>
-                        buttonRow.map((buttonCol) =>
-                            Markup.button.callback(
-                                ctx.loc(buttonCol.text, ctx),
-                                buttonCol.action
-                            )
-                        )
-                    )
-                ),
-            };
-        }
-        await ctx.reply(ctx.loc(screen.text, ctx), extra);
-    }
-};
+
 
 export const setupBot = (bot: ISLABot): Telegraf => {
-    const botInstance: Telegraf<BotContext> = new Telegraf<BotContext>(
-        bot.token
-    );
+
+    const botInstance = new Telegraf<BotContext>(bot.token);
 
     botInstance.use(session());
 
@@ -47,6 +18,7 @@ export const setupBot = (bot: ISLABot): Telegraf => {
 
     const scenes = [];
 
+    // TODO: перебор сцен и отрисовка необходимой вынести отдельно в HANDLERS
     for (const scene of bot.scenes) {
         const sceneInstance = new Scenes.BaseScene<BotContext>(scene.id);
 
@@ -77,15 +49,14 @@ export const setupBot = (bot: ISLABot): Telegraf => {
 
         scenes.push([scene.id, sceneInstance]);
     }
-
+    
     const stage = new Scenes.Stage<BotContext>();
     stage.scenes = new Map<string, Scenes.BaseScene<BotContext>>(scenes);
-
     botInstance.use(stage.middleware());
+    
+    botStart(botInstance, bot.initialScene)
 
-    botInstance.start(async (ctx: BotContext) => {
-        await ctx.scene.enter(bot.initialScene);
-    });
-
+    botErrorCatcher(botInstance)
+   
     return botInstance;
 };
