@@ -3,8 +3,9 @@ import { logger } from '@src/utils/logger'
 import { localeStorage } from '@src/utils/loc'
 import { BotContext } from '@src/context/botContext'
 import { ISLABot } from '@src/interfaces/ISLABot'
-import { botStart, enterScreen } from '@src/actions'
+import { enterSceneHandler } from '@src/handlers'
 import { botErrorCatcher } from '@src/utils/helpers'
+import { enterScene, enterScreen, botStart } from '@src/actions'
 
 
 
@@ -18,32 +19,34 @@ export const setupBot = (bot: ISLABot): Telegraf => {
 
     const scenes = []
 
-    // TODO: перебор сцен и отрисовка необходимой вынести отдельно в HANDLERS
     for (const scene of bot.scenes) {
+        // ининциируем Рабочую сцену
         const sceneInstance = new Scenes.BaseScene<BotContext>(scene.id)
-
-        sceneInstance.enter(async (ctx) => {
-            logger.info(`[${ctx.from.id}] enter scene ${scene.id}`)
-            await enterScreen(scene.screens, scene.initialScreen, ctx)
-        })
-
+        
+        // инициируем рабочий триггер на вход для каждой сцены сцену
+        enterSceneHandler(scene, sceneInstance)
+        
         sceneInstance.action(/([a-z]*) ([a-z]*)? ?(.*)/g, async (ctx, next) => {
             const action = ctx.match[1]
+            
             switch (action) {
                 case 'enter':
                     const entity = ctx.match[2]
                     switch (entity) {
                         case 'scene':
+                            await enterScene(ctx, ctx.match[3])
                             break
                         case 'screen':
-                            await enterScreen(scene.screens, ctx.match[3], ctx)
-                            return
+                            await enterScreen(ctx, scene.screens, ctx.match[3])
+                            break
                         default:
-                            return next()
+                            next()
+                            break
                     }
                     break
                 default:
-                    return next()
+                    next()
+                    break
             }
         })
 

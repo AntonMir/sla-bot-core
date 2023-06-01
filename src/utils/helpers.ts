@@ -7,8 +7,8 @@ import { logger } from './logger'
  */
 export const botErrorCatcher = (bot: Telegraf<BotContext>) => {
     return bot.catch((error, ctx) => {
-        logger.error({
-            "Bot Error:": error,
+        console.error({
+            "Bot Error": error,
             "Context": ctx.update
         })
     })

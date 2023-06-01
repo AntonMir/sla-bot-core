@@ -35,6 +35,10 @@ export const sampleLocale: ISLALocale[]  = [
         content: 'Не запомнил',
     },
     {
+        id: 'to_video-button',
+        content: 'Смотреть видео',
+    },
+    {
         id: 'good_answer-html',
         content:
             '🟢 Молодец! 🟢\n' +
@@ -49,11 +53,11 @@ export const sampleLocale: ISLALocale[]  = [
             'Подумай еще!\n'
     },
     {
-        id: 'cat-fox-videos',
-        content: '',
+        id: 'cat_fox-videos',
+        content: '/home/user/Projects/sla-bot-core/assets/giqMnjk8T5zJtNbdw.mp4',
     },
     {
-        id: 'cat-fox-earn-counter',
+        id: 'cat_fox_earn-counter',
         content: 'Какое животное изображено на видео?',
     },
     {
@@ -69,7 +73,24 @@ export const sampleLocale: ISLALocale[]  = [
         content: '🐭 Мышь',
     },
     {
-        id: 'end-earn-button',
+        id: 'end_earn-button',
         content: 'Закончить и вывести деньги',
+    },
+    {
+        id: 'videos-counter',
+        content: 
+            '💵 Вы заработали {reward.video}\n' +
+            '\n' +
+            'Баланс, {user.balance}\n' +
+            '\n' +
+            '👑 Что бы продолжить зарабатывать нажмите "Смотреть"',
+    },
+    {
+        id: 'next_video-button',
+        content: "Смотреть",
+    },
+    {
+        id: 'main_menu-button',
+        content: "Назад",
     },
 ]

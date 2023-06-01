@@ -21,7 +21,7 @@ export const sampleScenes: ScenesLike[]  = [
             {
                 id: '0.2',
                 text: 'rules-html',
-                action: 'run script rules-and-earn',
+                action: 'run script rules-and_earn',
                 buttons: [
                     [
                         {
@@ -34,6 +34,13 @@ export const sampleScenes: ScenesLike[]  = [
                         {
                             text: 'bad_answer-button',
                             action: 'enter screen 0.2.2',
+                            deleteMessage: true
+                        }
+                    ],
+                    [
+                        {
+                            text: 'to_video-button',
+                            action: 'enter scene video',
                             deleteMessage: true
                         }
                     ],
@@ -50,13 +57,13 @@ export const sampleScenes: ScenesLike[]  = [
         ],
     },
     {
-        id: 'cycle-1',
+        id: 'video',
         initialScreen: '1.1',
         screens: [
             {
                 id: '1.1',
-                video: 'cat-fox-videos',
-                caption: 'cat-fox-earn-counter',
+                video: 'cat_fox-videos',
+                caption: 'cat_fox_earn-counter',
                 buttons: [
                     [
                         {
@@ -78,8 +85,28 @@ export const sampleScenes: ScenesLike[]  = [
                     ],
                     [
                         {
-                            text: 'end-earn-button',
+                            text: 'end_earn-button',
                             action: 'enter scene end-bonus',
+                        },
+                    ],
+                ],
+            },
+            {
+                id: '1.2',
+                text: 'videos-counter',
+                buttons: [
+                    [
+                        {
+                            text: 'next_video-button',
+                            action: 'enter scene main-menu',
+                            deleteMessage: true,
+                        },
+                    ],
+                    [
+                        {
+                            text: 'main_menu-button',
+                            action: 'enter scene main-menu',
+                            deleteMessage: true,
                         },
                     ],
                 ],

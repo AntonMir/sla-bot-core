@@ -12,47 +12,47 @@ export type ScenesLike = ISLABaseScene
 
 export type ScreenLike = ISLATextScreen | ISLAImageScreen | ISLAVideoScreen
 
-type BotID = string
+export type BotID = string
 
 export type SceneID = string
 
-type ScreenID = string
+export type ScreenID = string
 
-type LocaleID = string
+export type LocaleID = string
 
 export interface ISLAScript {
     id: string
     script: string
 }
 
-interface ISLABaseScene {
+export interface ISLABaseScene {
     id: string
     initialScreen: ScreenID
     screens: ScreenLike[]
 }
 
-interface ISLAButton {
+export interface ISLAButton {
     text: string
     action: string
     deleteMessage?: boolean
 }
 
-interface ISLAScreenBase {
+export interface ISLAScreenBase {
     id: ScreenID
     buttons?: ISLAButton[][]
     action?: string
 }
 
-interface ISLATextScreen extends ISLAScreenBase {
+export interface ISLATextScreen extends ISLAScreenBase {
     text: LocaleID
 }
 
-interface ISLAImageScreen extends ISLAScreenBase {
+export interface ISLAImageScreen extends ISLAScreenBase {
     image: LocaleID
     caption?: LocaleID
 }
 
-interface ISLAVideoScreen extends ISLAScreenBase {
+export interface ISLAVideoScreen extends ISLAScreenBase {
     video: LocaleID
     caption?: LocaleID
 }
