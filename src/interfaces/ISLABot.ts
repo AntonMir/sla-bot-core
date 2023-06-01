@@ -1,64 +1,64 @@
 export interface ISLABot {
-    id: BotID;
-    token: string;
-    username: string;
-    initialScene: SceneID;
-    scenes: ScenesLike[];
-    locale: ISLALocale[];
-    scripts?: ISLAScript[];
+    id: BotID
+    token: string
+    username: string
+    initialScene: SceneID
+    scenes: ScenesLike[]
+    locale: ISLALocale[]
+    scripts?: ISLAScript[]
 }
 
-export type ScenesLike = ISLABaseScene;
+export type ScenesLike = ISLABaseScene
 
-export type ScreenLike = ISLATextScreen | ISLAImageScreen | ISLAVideoScreen;
+export type ScreenLike = ISLATextScreen | ISLAImageScreen | ISLAVideoScreen
 
-type BotID = string;
+type BotID = string
 
-export type SceneID = string;
+export type SceneID = string
 
-type ScreenID = string;
+type ScreenID = string
 
-type LocaleID = string;
+type LocaleID = string
 
 export interface ISLAScript {
-    id: string;
-    script: string;
+    id: string
+    script: string
 }
 
 interface ISLABaseScene {
-    id: string;
-    initialScreen: ScreenID;
-    screens: ScreenLike[];
+    id: string
+    initialScreen: ScreenID
+    screens: ScreenLike[]
 }
 
 interface ISLAButton {
-    text: string;
-    action: string;
-    deleteMessage?: boolean;
+    text: string
+    action: string
+    deleteMessage?: boolean
 }
 
 interface ISLAScreenBase {
-    id: ScreenID;
-    buttons?: ISLAButton[][];
-    action?: string;
+    id: ScreenID
+    buttons?: ISLAButton[][]
+    action?: string
 }
 
 interface ISLATextScreen extends ISLAScreenBase {
-    text: LocaleID;
+    text: LocaleID
 }
 
 interface ISLAImageScreen extends ISLAScreenBase {
-    image: LocaleID;
-    caption?: LocaleID;
+    image: LocaleID
+    caption?: LocaleID
 }
 
 interface ISLAVideoScreen extends ISLAScreenBase {
-    video: LocaleID;
-    caption?: LocaleID;
+    video: LocaleID
+    caption?: LocaleID
 }
 
 export interface ISLALocale {
-    id: LocaleID;
-    content: string;
-    formatted?: boolean;
+    id: LocaleID
+    content: string
+    formatted?: boolean
 }

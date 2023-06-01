@@ -1,4 +1,4 @@
-import { ISLALocale } from '../interfaces/ISLABot'
+import { ISLALocale } from '@src/interfaces/ISLABot'
 
 export const sampleLocale: ISLALocale[]  = [
     {

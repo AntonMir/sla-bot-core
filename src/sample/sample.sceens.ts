@@ -1,4 +1,4 @@
-import { ScenesLike } from '../interfaces/ISLABot'
+import { ScenesLike } from '@src/interfaces/ISLABot'
 
 export const sampleScenes: ScenesLike[]  = [
     {

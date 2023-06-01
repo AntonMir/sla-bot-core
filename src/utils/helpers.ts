@@ -1,6 +1,6 @@
-import { Telegraf } from 'telegraf';
-import { BotContext } from '../context/botContext';
-import { logger } from './logger';
+import { Telegraf } from 'telegraf'
+import { BotContext } from '../context/botContext'
+import { logger } from './logger'
 
 /**
  * Миддлевара для отлова ошибок бота

@@ -1,4 +1,4 @@
-import { ISLAScript } from '../interfaces/ISLABot'
+import { ISLAScript } from '@src/interfaces/ISLABot'
 
 export const sampleScripts: ISLAScript[] = [
     {

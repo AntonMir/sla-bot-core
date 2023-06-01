@@ -1,7 +1,7 @@
-import { ISLABot } from '../interfaces/ISLABot';
-import { sampleLocale } from './sample.locale';
-import { sampleScenes } from './sample.sceens';
-import { sampleScripts } from './sample.scripts';
+import { ISLABot } from '@src/interfaces/ISLABot'
+import { sampleLocale } from './sample.locale'
+import { sampleScenes } from './sample.sceens'
+import { sampleScripts } from './sample.scripts'
 
 export const sampleBot: ISLABot = {
     id: 'cat-fox-bot',
@@ -12,4 +12,4 @@ export const sampleBot: ISLABot = {
     scenes: sampleScenes,
     locale: sampleLocale,
     scripts: sampleScripts
-};
+}
