@@ -44,9 +44,11 @@ const enterScreen = async (
     }
 
     if('video' in screen) {
-        let extra: ExtraVideo = {
-            parse_mode: 'HTML',
-            caption: screen.caption,
+        let extra: ExtraVideo = {}
+
+        if('caption' in screen) {
+            extra.caption = ctx.loc(screen.caption, ctx)
+            extra.parse_mode = 'HTML'
         }
         if ('buttons' in screen) {
             extra = {
@@ -63,7 +65,7 @@ const enterScreen = async (
                 ),
             }
         }
-        await ctx.replyWithVideo(ctx.loc(screen.video, ctx), extra)
+        await ctx.replyWithVideo({source: ctx.loc(screen.video, ctx)}, extra)
     }
 }
 

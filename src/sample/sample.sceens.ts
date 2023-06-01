@@ -98,7 +98,7 @@ export const sampleScenes: ScenesLike[]  = [
                     [
                         {
                             text: 'next_video-button',
-                            action: 'enter scene main-menu',
+                            action: 'enter scene video',
                             deleteMessage: true,
                         },
                     ],
