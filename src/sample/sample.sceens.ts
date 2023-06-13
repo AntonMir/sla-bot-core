@@ -3,114 +3,84 @@ import { ScenesLike } from '@src/interfaces/ISLABot'
 export const sampleScenes: ScenesLike[]  = [
     {
         id: 'agreement',
-        initialScreen: '0.1',
+        initialScreen: '0.0',
         screens: [
             {
-                id: '0.1',
-                text: 'welcome-html',
+                id: '0.0',
+                text: 'agreement_html',
                 buttons: [
                     [
                         {
-                            text: 'start-button',
-                            action: 'enter screen 0.2',
+                            text: 'agreement_btn',
+                            action: 'enter screen 0.1',
                             deleteMessage: true,
                         },
                     ],
                 ],
+            },
+            {
+                id: '0.1',
+                text: 'video_preparing_0_html',
+                action: 'sleep 2000\n' + 'enter screen 0.2'
             },
             {
                 id: '0.2',
-                text: 'rules-html',
-                action: 'run script rules-and_earn',
-                buttons: [
-                    [
-                        {
-                            text: 'good_answer-button',
-                            action: 'enter screen 0.2.1',
-                            deleteMessage: true
-                        }
-                    ],
-                    [
-                        {
-                            text: 'bad_answer-button',
-                            action: 'enter screen 0.2.2',
-                            deleteMessage: true
-                        }
-                    ],
-                    [
-                        {
-                            text: 'to_video-button',
-                            action: 'enter scene video',
-                            deleteMessage: true
-                        }
-                    ],
-                ]
+                text: 'video_preparing_100_html',
+                action: 'sleep 2000\n' + 'enter screen 0.3'
             },
             {
-                id: '0.2.1',
-                text: 'good_answer-html',
-            },
-            {
-                id: '0.2.2',
-                text: 'bad_answer-html',
-            },
-        ],
+                id: '0.3',
+                text: 'video_rules_html',
+                action: 'sleep 2000\n' + 'delete\n' + 'enter scene video'
+            }
+        ]
     },
     {
         id: 'video',
-        initialScreen: '1.1',
+        initialScreen: '1.0',
         screens: [
             {
-                id: '1.1',
-                video: 'cat_fox-videos',
-                caption: 'cat_fox_earn-counter',
-                buttons: [
-                    [
-                        {
-                            text: 'cat-button',
-                            action: 'enter screen 1.2',
-                        },
-                    ],
-                    [
-                        {
-                            text: 'fox-button',
-                            action: 'enter screen 1.2',
-                        },
-                    ],
-                    [
-                        {
-                            text: 'mice-button',
-                            action: 'enter screen 1.2',
-                        },
-                    ],
-                    [
-                        {
-                            text: 'end_earn-button',
-                            action: 'enter scene end-bonus',
-                        },
-                    ],
-                ],
+                id: '1.0',
+                text: 'video_counter',
+                action: 'sleep 1000\n' + 'enter screen 1.0.1'
             },
             {
-                id: '1.2',
-                text: 'videos-counter',
+                id: '1.0.1',
+                video: 'videos',
+                caption: 'video_html',
                 buttons: [
                     [
                         {
-                            text: 'next_video-button',
-                            action: 'enter scene video',
+                            text: 'video_viewed_btn',
+                            action: 'enter screen 1.1.2',
+                            // TODO: продумать скрипт условия
+                            // action: 'if waited > 6 ---> enter screen 1.1.1',
                             deleteMessage: true,
                         },
                     ],
                     [
                         {
-                            text: 'main_menu-button',
-                            action: 'enter scene main-menu',
+                            text: 'finish_watching_btn',
+                            action: 'enter scene 3.1',
                             deleteMessage: true,
                         },
                     ],
                 ],
             },
-        ],
-    },
+            // TODO: Всплывающие уведомления надо как-то отдельно обозначить
+            // {
+            //     id: '1.1.1',
+            //     text: 'did_not_watching_popup_html',
+            //     action: 'sleep 1000\n' + 'enter screen 1.0'
+            // },
+            {
+                id: '1.1.2',
+                text: 'video_reward_html',
+                action: 
+                    'sleep 1000\n' + 
+                    'enter screen 1.0',
+            },
+        ]
+    }
 ]
+

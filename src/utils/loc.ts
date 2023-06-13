@@ -12,13 +12,19 @@ const localeFormatter = (
     const foundEntities = [...txt.matchAll(/\{([a-zA-Z_]*)\.([a-zA-Z_]*)}/g)]
     const entities = []
     for (const rawEntity of foundEntities) {
-        const namespace = rawEntity[1]
-        const variable = rawEntity[2]
-        const fullMatch = rawEntity[0]
+        const namespace = rawEntity[1] //videos
+        const variable = rawEntity[2] //reward
+        const fullMatch = rawEntity[0] //videos.reward
+
+        console.log('ctx', ctx)
+
         let value = ''
         switch (namespace) {
             case 'user':
                 value = ctx?.from?.[variable] || ResolvingErrorValue
+                break
+            case 'videos':
+                value = ctx.session.videos[variable] || ResolvingErrorValue
                 break
             case 'loc':
                 value =

@@ -60,6 +60,11 @@ export const setupBot = (bot: ISLABot): Telegraf => {
     botStart(botInstance, bot.initialScene)
 
     botErrorCatcher(botInstance)
+
+    // TODO: Допилить Reset
+    // botInstance.command('slaReset', ctx => {
+        
+    // })
    
     return botInstance
 }

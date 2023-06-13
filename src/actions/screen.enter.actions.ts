@@ -3,6 +3,7 @@ import { ScreenLike } from '@src/interfaces/ISLABot'
 import { Markup } from 'telegraf'
 import { BotContext } from '@src/context/botContext'
 import { logger } from '@src/utils/logger'
+import { sleep } from '@src/utils/sleep'
 
 
 /**
@@ -18,8 +19,6 @@ const enterScreen = async (
 ) => {
     logger.info(`[${ctx.from.id}] enter screen ${screenId}`)
     const screen = screens.find((sc) => sc.id === screenId)
-
-    console.log('screen', screen)
 
     if ('text' in screen) {
         let extra: ExtraReplyMessage = {
@@ -51,6 +50,7 @@ const enterScreen = async (
             extra.parse_mode = 'HTML'
         }
         if ('buttons' in screen) {
+            // console.log({...})
             extra = {
                 ...extra,
                 ...Markup.inlineKeyboard(
@@ -66,6 +66,29 @@ const enterScreen = async (
             }
         }
         await ctx.replyWithVideo({source: ctx.loc(screen.video, ctx)}, extra)
+    }
+    if('action' in screen) {
+        const actionList = screen.action.split('\n')
+
+        for await (const action of actionList) {
+            const script = action.split(' ')
+
+            if(script[0] === 'sleep') {
+                await sleep(Number(script[1]))
+                continue
+            }
+            if(script[0] === 'enter') {
+                if(script[1] === 'scene') {
+                    await ctx.scene.enter(script[2])
+                    continue
+                }
+                if(script[1] === 'screen') {
+                    await enterScreen(ctx, screens, script[2])
+                    continue
+                }
+            }
+        }
+      
     }
 }
 
