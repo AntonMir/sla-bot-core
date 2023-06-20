@@ -12,7 +12,7 @@ export const sampleScenes: ScenesLike[]  = [
                     [
                         {
                             text: 'agreement_btn',
-                            action: 'enter screen 0.1',
+                            action: 'delete\n' + 'enter screen 0.1\n',
                             deleteMessage: true,
                         },
                     ],
@@ -21,17 +21,17 @@ export const sampleScenes: ScenesLike[]  = [
             {
                 id: '0.1',
                 text: 'video_preparing_0_html',
-                action: 'sleep 2000\n' + 'enter screen 0.2'
+                action: 'sleep 500\n' + 'delete\n' + 'enter screen 0.2'
             },
             {
                 id: '0.2',
                 text: 'video_preparing_100_html',
-                action: 'sleep 2000\n' + 'enter screen 0.3'
+                action: 'sleep 500\n' + 'delete\n' + 'enter screen 0.3'
             },
             {
                 id: '0.3',
                 text: 'video_rules_html',
-                action: 'sleep 2000\n' + 'delete\n' + 'enter scene video'
+                action: 'sleep 500\n' + 'delete\n' + 'enter scene video'
             }
         ]
     },
@@ -42,7 +42,7 @@ export const sampleScenes: ScenesLike[]  = [
             {
                 id: '1.0',
                 text: 'video_counter',
-                action: 'sleep 1000\n' + 'enter screen 1.0.1'
+                action: 'sleep 500\n' + 'delete\n' + 'enter screen 1.0.1'
             },
             {
                 id: '1.0.1',
@@ -52,33 +52,28 @@ export const sampleScenes: ScenesLike[]  = [
                     [
                         {
                             text: 'video_viewed_btn',
-                            action: 'enter screen 1.1.2',
-                            // TODO: продумать скрипт условия
-                            // action: 'if waited > 6 ---> enter screen 1.1.1',
-                            deleteMessage: true,
+                            action: 'run script video-watch-reward',
                         },
                     ],
                     [
                         {
                             text: 'finish_watching_btn',
-                            action: 'enter scene 3.1',
+                            action: 'delete\n' + 'enter scene 3.1',
                             deleteMessage: true,
                         },
                     ],
                 ],
             },
-            // TODO: Всплывающие уведомления надо как-то отдельно обозначить
-            // {
-            //     id: '1.1.1',
-            //     text: 'did_not_watching_popup_html',
-            //     action: 'sleep 1000\n' + 'enter screen 1.0'
-            // },
             {
                 id: '1.1.2',
                 text: 'video_reward_html',
-                action: 
-                    'sleep 1000\n' + 
-                    'enter screen 1.0',
+                action: 'sleep 500\n' + 'delete\n' + 'enter screen 1.0',
+            },
+        ],
+        popups: [
+            {
+                id: '1.1.1',
+                text: 'did_not_watching_popups_html',
             },
         ]
     }

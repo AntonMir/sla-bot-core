@@ -5,12 +5,20 @@ export interface ISLABot {
     initialScene: SceneID
     scenes: ScenesLike[]
     locale: ISLALocale[]
-    scripts?: ISLAScript[]
+    scripts: ISLAScript[]
+    session: ISLASession
+}
+
+export interface ISLAScript {
+    id: string
+    text: string
 }
 
 export type ScenesLike = ISLABaseScene
 
 export type ScreenLike = ISLATextScreen | ISLAImageScreen | ISLAVideoScreen
+
+export type PopupLike = ISLATextScreen | ISLAImageScreen | ISLAVideoScreen
 
 export type BotID = string
 
@@ -20,15 +28,15 @@ export type ScreenID = string
 
 export type LocaleID = string
 
-export interface ISLAScript {
-    id: string
-    script: string
+export interface ISLASession {
+    [key: string]: any
 }
 
 export interface ISLABaseScene {
     id: string
     initialScreen: ScreenID
     screens: ScreenLike[]
+    popups?: PopupLike[]
 }
 
 export interface ISLAButton {

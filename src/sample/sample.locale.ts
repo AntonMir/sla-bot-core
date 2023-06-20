@@ -53,15 +53,15 @@ export const sampleLocale: ISLALocale[]  = [
     // 1.0 VIDEO
     {
         id: 'videos',
-        content: '/home/user/Projects/sla-bot-core/assets/giqMnjk8T5zJtNbdw.mp4',
+        content: '/home/user/Projects/sla-bot-core/assets/0_welcome.mp4',
     },
     {
         id: 'video_counter',
         content: 
-            `📱 Тариф просмотра: {videos.reward}€\n` +
+            `📱 Тариф просмотра: {session.videoReward}€\n` +
             `\n` +
-            `✅ Выполнено: {videos.watched} из {videos.limit}\n` +
-            `💰 Ваш баланс: {user.balance}€`
+            `✅ Выполнено: {session.videoWatched} из {session.videoLimit}\n` +
+            `💰 Ваш баланс: {session.balance}€`
         ,
         formatted: true
     },
@@ -71,21 +71,23 @@ export const sampleLocale: ISLALocale[]  = [
     },
     {
         id: 'video_viewed_btn',
-        content: `✅ Просмотрено (+{videos.reward}€)`,
+        content: `✅ Просмотрено (+{session.videoReward}€)`,
+        formatted: true
     },
     {
         id: 'finish_watching_btn',
         content: `🖐️ Закончить`,
     },
     {
-        id: 'did_not_watching_popup_html',
+        id: 'did_not_watching_popups_html',
         content: `Вы еще не посмотрели видео до конца`,
     },
     {
         id: 'video_reward_html',
         content: 
             `✅ Просмотр засчитан\n` +
-            `• Баланс: {user.balance}€`
+            `• Баланс: {session.balance}€`
         ,
+        formatted: true
     },
 ]

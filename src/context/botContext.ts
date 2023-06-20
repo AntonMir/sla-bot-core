@@ -1,24 +1,14 @@
 import { Context, Scenes } from 'telegraf'
-
-interface Videos {
-    reward: number
-    watched: number
-    limit: number
-}
-
-interface User {
-    first_name: string
-    balance: number
-}
+import { ScriptResolver } from '@src/resolver'
 
 interface Session extends Scenes.SceneSessionData {
-    videos: Videos
-    user: User
     __scenes: Scenes.SceneSessionData
+    [key: string]: any
 }
 
 export interface BotContext extends Context {
     loc: (key: string, ctx: BotContext) => string
+    resolver: ScriptResolver
     session: Session
     scene: Scenes.SceneContextScene<BotContext>
 }

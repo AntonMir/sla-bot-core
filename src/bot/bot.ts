@@ -1,12 +1,11 @@
 import { Scenes, session, Telegraf } from 'telegraf'
-import { logger } from '@src/utils/logger'
 import { localeStorage } from '@src/utils/loc'
 import { BotContext } from '@src/context/botContext'
 import { ISLABot } from '@src/interfaces/ISLABot'
 import { enterSceneHandler } from '@src/handlers'
 import { botErrorCatcher } from '@src/utils/helpers'
-import { enterScene, enterScreen, botStart } from '@src/actions'
-
+import { ScriptResolver } from '@src/resolver'
+import { botStart } from '@src/handlers'
 
 
 export const setupBot = (bot: ISLABot): Telegraf => {
@@ -17,6 +16,8 @@ export const setupBot = (bot: ISLABot): Telegraf => {
 
     botInstance.context.loc = localeStorage(bot)
 
+    botInstance.context.resolver = new ScriptResolver(bot)
+
     const scenes = []
 
     for (const scene of bot.scenes) {
@@ -24,32 +25,14 @@ export const setupBot = (bot: ISLABot): Telegraf => {
         const sceneInstance = new Scenes.BaseScene<BotContext>(scene.id)
         
         // инициируем рабочий триггер на вход для каждой сцены сцену
-        enterSceneHandler(scene, sceneInstance)
+        enterSceneHandler(bot, scene, sceneInstance)
         
-        sceneInstance.action(/([a-z]*) ([a-z]*)? ?(.*)/g, async (ctx, next) => {
-            const action = ctx.match[1]
-            
-            switch (action) {
-                case 'enter':
-                    const entity = ctx.match[2]
-                    switch (entity) {
-                        case 'scene':
-                            await enterScene(ctx, ctx.match[3])
-                            break
-                        case 'screen':
-                            await enterScreen(ctx, scene.screens, ctx.match[3])
-                            break
-                        default:
-                            next()
-                            break
-                    }
-                    break
-                default:
-                    next()
-                    break
+        sceneInstance.action(/(.*)/g, async (ctx, next) => {
+            const actions = ctx.match.input.split('\n')
+            for(let action of actions) {
+                await ctx.resolver.resolveOne(bot, ctx, scene, action, 'button')
             }
         })
-
         scenes.push([scene.id, sceneInstance])
     }
     
@@ -57,14 +40,14 @@ export const setupBot = (bot: ISLABot): Telegraf => {
     stage.scenes = new Map<string, Scenes.BaseScene<BotContext>>(scenes)
     botInstance.use(stage.middleware())
     
-    botStart(botInstance, bot.initialScene)
+    botStart(botInstance, bot.initialScene, bot.session)
 
     botErrorCatcher(botInstance)
 
-    // TODO: Допилить Reset
-    // botInstance.command('slaReset', ctx => {
-        
-    // })
-   
+    botInstance.command('slaReset', async ctx => {
+        ctx.session = { __scenes: {}}
+        ctx.reply('Bot has been restarted. /start')
+    })
+
     return botInstance
 }
