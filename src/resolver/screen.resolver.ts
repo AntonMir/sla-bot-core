@@ -3,6 +3,7 @@ import { ISLABot, ScenesLike, ScreenLike } from '@src/interfaces/ISLABot'
 import { Markup } from 'telegraf'
 import { BotContext } from '@src/context/botContext'
 import { logger } from '@src/utils/logger'
+import randomizer from '@src/utils/randomizer'
 
 /**
  * Отрисовать один из экранов доступных в текущей сцене
@@ -66,6 +67,8 @@ const screenResolver = async (
                 ),
             }   
         }
+        
+        // const randomVideo = randomizer.array(ctx, bot, ctx.loc(screen.video, ctx))
         bot.session.videoStartTimer = Date.parse(String(new Date()))
         bot.session.lastMessageId = (await ctx.replyWithVideo({source: ctx.loc(screen.video, ctx)}, extra)).message_id
     }
