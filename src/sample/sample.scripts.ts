@@ -1,4 +1,4 @@
-import { ISLAScript } from "@src/interfaces/ISLABot";
+import { ISLAScript } from "@src/ts/ISLABot";
 
 export const sampleScripts: ISLAScript[]  = [
     {
@@ -19,6 +19,9 @@ export const sampleScripts: ISLAScript[]  = [
     // },
     {
         id: 'video-watch-reward',
-        text: `session balance + 10\n` + 'delete\n' + `enter screen 1.1.2`
+        text: `session videoCounter + 1\n` + 
+            `session balance + 10\n` + 
+            'delete\n' + 
+            `enter screen 1.1.2`
     },
 ]

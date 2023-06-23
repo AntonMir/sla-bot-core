@@ -1,5 +1,5 @@
-import { BotContext } from '../context/botContext'
-import { ISLABot } from '../interfaces/ISLABot'
+import { BotContext } from '../ts/botContext'
+import { ISLABot } from '../ts/ISLABot'
 
 const ResolvingErrorValue = '<b>*RESOLVING_ERROR*</b>'
 

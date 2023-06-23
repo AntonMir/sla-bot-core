@@ -3,6 +3,8 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 import 'module-alias/register'
 import { sampleBot } from '@src/sample'
-import { botLauncher } from '@src/bot/launcher'
+import { setupBot } from './bot'
 
-botLauncher(sampleBot)
+setupBot(sampleBot).launch({
+    allowedUpdates: ['message', 'callback_query'],
+})

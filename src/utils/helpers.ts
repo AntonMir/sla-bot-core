@@ -1,5 +1,5 @@
 import { Telegraf } from 'telegraf'
-import { BotContext } from '../context/botContext'
+import { BotContext } from '../ts/botContext'
 import { logger } from './logger'
 
 /**

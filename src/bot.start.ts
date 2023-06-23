@@ -1,6 +1,6 @@
-import { ISLASession, SceneID } from '@src/interfaces/ISLABot'
+import { ISLASession, SceneID } from '@src/ts/ISLABot'
 import { Telegraf } from 'telegraf'
-import { BotContext } from '@src/context/botContext'
+import { BotContext } from '@src/ts/botContext'
 
 /**
  * Запуск бота: /start

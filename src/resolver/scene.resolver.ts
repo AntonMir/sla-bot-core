@@ -1,9 +1,4 @@
-import { ISLABaseScene } from '@src/interfaces/ISLABot'
-import { Scenes } from 'telegraf'
-import { BotContext } from '@src/context/botContext'
-import { logger } from '@src/utils/logger'
-import { screenResolver } from '@src/resolver'
-
+import { BotContext } from '@src/ts/botContext'
 
 /**
  * Отрисовать сцену

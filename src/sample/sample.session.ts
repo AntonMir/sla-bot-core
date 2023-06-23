@@ -1,4 +1,4 @@
-import { ISLASession } from '@src/interfaces/ISLABot'
+import { ISLASession } from '@src/ts/ISLABot'
 
 // параметры задаем без вложенности
 export const sampleSession: ISLASession = {
@@ -8,5 +8,5 @@ export const sampleSession: ISLASession = {
     videoReward: 10,
     videoLimit: 10,
     videoCounter: 0,
-    // videoTimerLimit: 4
+    watchTimerLimit: 4 // минимальное время просмотра
 }

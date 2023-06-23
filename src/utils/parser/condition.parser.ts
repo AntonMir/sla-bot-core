@@ -1,4 +1,4 @@
-import { ISLABot } from "@src/interfaces/ISLABot"
+import { ISLABot } from "@src/ts/ISLABot"
 
 type MathFunction = (a: number, b: number) => number
 

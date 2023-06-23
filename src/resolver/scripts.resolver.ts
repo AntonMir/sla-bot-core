@@ -1,5 +1,5 @@
-import { BotContext } from "@src/context/botContext";
-import { ISLABaseScene, ISLABot, ISLAScript } from "@src/interfaces/ISLABot";
+import { BotContext } from "@src/ts/botContext";
+import { ISLABaseScene, ISLABot, ISLAScript } from "@src/ts/ISLABot";
 import { sleep } from "@src/utils/sleep";
 import screenResolver from "./screen.resolver";
 import { Context } from "telegraf";
@@ -106,11 +106,11 @@ class ScriptResolver {
 
                 switch(typeof bot.session[entity]) {
                     case 'number': {
-                        console.log(entity, '>>>', bot.session[entity])
+                        const prew = bot.session[entity]
                         bot.session[entity] = arithmeticParser.parseStr(
                             `${bot.session[entity]} ${operator} ${value}`
                         )
-                        console.log('new', entity, '>>>', bot.session[entity])
+                        console.log(entity, prew, '>', bot.session[entity])
                         break
                     }
                     case 'object': {
@@ -133,6 +133,15 @@ class ScriptResolver {
                 }
                 break
             }
+            // case 'referral': {
+            //     // [
+            //     //     Markup.button.switchToChat(
+            //     //         ctx.loc._('SHARE_BUTTON'),
+            //     //         `https://t.me/${ctx.botObject.username}?start=${ctx.session.id}`
+            //     //     ),
+            //     // ],
+            //     break
+            // }
         }
     }
 }

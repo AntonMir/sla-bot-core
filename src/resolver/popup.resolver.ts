@@ -1,7 +1,7 @@
 import { ExtraReplyMessage, ExtraVideo } from 'telegraf/typings/telegram-types'
-import { ISLABot, PopupLike, ScenesLike, ScreenLike } from '@src/interfaces/ISLABot'
+import { ISLABot, PopupLike, ScenesLike, ScreenLike } from '@src/ts/ISLABot'
 import { Markup } from 'telegraf'
-import { BotContext } from '@src/context/botContext'
+import { BotContext } from '@src/ts/botContext'
 import { logger } from '@src/utils/logger'
 
 /**

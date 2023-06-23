@@ -67,6 +67,8 @@ export interface ISLAVideoScreen extends ISLAScreenBase {
 
 export interface ISLALocale {
     id: LocaleID
-    content: string
+    content?: string
+    contentArr?: string[]
     formatted?: boolean
 }
+

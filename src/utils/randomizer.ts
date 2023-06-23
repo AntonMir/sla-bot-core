@@ -1,26 +1,47 @@
-import { BotContext } from "@src/context/botContext";
-import { ISLABot } from "@src/interfaces/ISLABot";
+import { BotContext } from "@src/ts/botContext";
+import { ISLABot, ISLALocale } from "@src/ts/ISLABot";
 
 class Randomizer {
 
-    array(ctx: BotContext, bot: ISLABot, mediaList: string[]): string | null {
-        if (!mediaList || !mediaList.length) {
-            console.error('arrRandomizer: List is empty')
-            return null
-        }
-        const filteredEl = mediaList.filter(
-            (el: string) => !bot.session.watched.includes(el)
-        );
-        if (!filteredEl || !filteredEl.length) {
-            console.error('arrRandomizer: Unwatched elements left')
-            return null
-        }
-        const randomEl = filteredEl[Math.floor(Math.random() * filteredEl.length)];
+    /**
+     * 
+     * @param {BotContext} ctx 
+     * @param {ISLABot} bot 
+     * @param {string} listId - id списка медиа элементов в локализации 
+     * @returns 
+     */
+    array(bot: ISLABot, listId: string): string {
+        try {
+            const locale: ISLALocale = bot.locale.find((el) => el.id === listId)
+            const content: string[] | string = locale.content || locale.contentArr
 
-        // ctx.session.watched.push(randomEl);
-        // TODO: прокинуть название локализации медиа элементов
-        ctx.session[`_watched-${'video'}`].push(randomEl);
-        return randomEl
+            if (!content || !content.length) {
+                console.error('arrRandomizer: Content is empty')
+                return listId
+            }
+
+            if(typeof content === 'string') {
+                return content
+            }
+
+            if(bot.session[`_watched-${listId}`] === undefined) {
+                bot.session[`_watched-${listId}`] = []
+            }
+
+            const filteredEl = content.filter(
+                (el: string) => !bot.session[`_watched-${listId}`].includes(el)
+            );
+
+            const randomEl = filteredEl[Math.floor(Math.random() * filteredEl.length)];
+            
+            // save watched element to session
+            bot.session[`_watched-${listId}`].push(randomEl);
+
+            return randomEl
+           
+        } catch(e) {
+            console.error('Randomizer array Error>>>', e)
+        }
     }
 
 }

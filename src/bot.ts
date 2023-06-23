@@ -1,11 +1,13 @@
 import { Scenes, session, Telegraf } from 'telegraf'
 import { localeStorage } from '@src/utils/loc'
-import { BotContext } from '@src/context/botContext'
-import { ISLABot } from '@src/interfaces/ISLABot'
-import { enterSceneHandler } from '@src/handlers'
+import { BotContext } from '@src/ts/botContext'
+import { ISLABot } from '@src/ts/ISLABot'
 import { botErrorCatcher } from '@src/utils/helpers'
-import { ScriptResolver } from '@src/resolver'
-import { botStart } from '@src/handlers'
+import { screenResolver, ScriptResolver } from '@src/resolver'
+import { FilePathService } from '@src/utils/filePath'
+import actionResolver from '@src/resolver/action.resolver'
+import { logger } from '@src/utils/logger'
+import botStart from './bot.start'
 
 
 export const setupBot = (bot: ISLABot): Telegraf => {
@@ -18,6 +20,8 @@ export const setupBot = (bot: ISLABot): Telegraf => {
 
     botInstance.context.resolver = new ScriptResolver(bot)
 
+    botInstance.context.filePath = new FilePathService();
+
     const scenes = []
 
     for (const scene of bot.scenes) {
@@ -25,23 +29,27 @@ export const setupBot = (bot: ISLABot): Telegraf => {
         const sceneInstance = new Scenes.BaseScene<BotContext>(scene.id)
         
         // инициируем рабочий триггер на вход для каждой сцены сцену
-        enterSceneHandler(bot, scene, sceneInstance)
-        
-        sceneInstance.action(/(.*)/g, async (ctx, next) => {
-            const actions = ctx.match.input.split('\n')
-            for(let action of actions) {
-                await ctx.resolver.resolveOne(bot, ctx, scene, action, 'button')
-            }
+        // enterSceneHandler(bot, scene, sceneInstance)
+        sceneInstance.enter(async (ctx) => {
+            logger.info(`[${ctx.from.id}] enter scene ${scene.id}`)
+            await screenResolver(bot, ctx, scene, scene.screens, scene.initialScreen)
         })
+
+        // парсинг button action для каждой сцены
+        actionResolver(bot, sceneInstance, scene)
+
         scenes.push([scene.id, sceneInstance])
     }
     
     const stage = new Scenes.Stage<BotContext>()
     stage.scenes = new Map<string, Scenes.BaseScene<BotContext>>(scenes)
+
     botInstance.use(stage.middleware())
     
+    // bot.start(...)
     botStart(botInstance, bot.initialScene, bot.session)
 
+    // Отлов ошибок
     botErrorCatcher(botInstance)
 
     botInstance.command('slaReset', async ctx => {

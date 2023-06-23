@@ -1,9 +1,10 @@
 import { ExtraReplyMessage, ExtraVideo } from 'telegraf/typings/telegram-types'
-import { ISLABot, ScenesLike, ScreenLike } from '@src/interfaces/ISLABot'
+import { ISLABot, ScenesLike, ScreenLike } from '@src/ts/ISLABot'
 import { Markup } from 'telegraf'
-import { BotContext } from '@src/context/botContext'
+import { BotContext } from '@src/ts/botContext'
 import { logger } from '@src/utils/logger'
 import randomizer from '@src/utils/randomizer'
+import buttonResolver from './button.resolver'
 
 /**
  * Отрисовать один из экранов доступных в текущей сцене
@@ -24,53 +25,39 @@ const screenResolver = async (
     
     if ('text' in screen) {
         let extra: ExtraReplyMessage = {
-            parse_mode: 'HTML',
+            parse_mode: 'HTML'
         }
         if ('buttons' in screen) {
-            // TODO: УБРАТЬ 2 ОДИНАКОВЫХ RESOLVERS НА buttons
             extra = {
                 ...extra,
-                ...Markup.inlineKeyboard(
-                    screen.buttons.map((buttonRow) =>
-                        buttonRow.map((buttonCol) =>
-                            Markup.button.callback(
-                                ctx.loc(buttonCol.text, ctx),
-                                buttonCol.action
-                            )
-                        )
-                    )
-                ),
+                ...buttonResolver(ctx, screen)
             }
+            bot.session.lastMessageId = (await ctx.reply(ctx.loc(screen.text, ctx), extra)).message_id
         }
-        bot.session.lastMessageId = (await ctx.reply(ctx.loc(screen.text, ctx), extra)).message_id
     }
     if('video' in screen) {
         let extra: ExtraVideo = {}
 
         if('caption' in screen) {
-            extra.caption = ctx.loc(screen.caption, ctx)
-            extra.parse_mode = 'HTML'
-        }
-        if ('buttons' in screen) {
-            // TODO: УБРАТЬ 2 ОДИНАКОВЫХ RESOLVERS НА buttons
             extra = {
                 ...extra,
-                ...Markup.inlineKeyboard(
-                    screen.buttons.map((buttonRow) =>
-                        buttonRow.map((buttonCol) =>
-                            Markup.button.callback(
-                                ctx.loc(buttonCol.text, ctx),
-                                buttonCol.action
-                            )
-                        )
-                    )
-                ),
+                caption: ctx.loc(screen.caption, ctx),
+                parse_mode: 'HTML'
+            }
+        }
+        if ('buttons' in screen) {
+            extra = {
+                ...extra,
+                ...buttonResolver(ctx, screen)
             }   
         }
         
-        // const randomVideo = randomizer.array(ctx, bot, ctx.loc(screen.video, ctx))
-        bot.session.videoStartTimer = Date.parse(String(new Date()))
-        bot.session.lastMessageId = (await ctx.replyWithVideo({source: ctx.loc(screen.video, ctx)}, extra)).message_id
+        // TODO: не нравится реализация случайного видео
+        const randomVideo = randomizer.array(bot, screen.video)
+        const filePath = ctx.filePath.getFilePath(randomVideo)
+        // TODO: реализация таймера на просмотр видео не нравится
+        bot.session.watchStartTimer = Date.parse(String(new Date()))
+        bot.session.lastMessageId = (await ctx.replyWithVideo({source: filePath}, extra)).message_id
     }
     if('action' in screen) {
         // если в строке установлены несколько скриптов, парсим каждый
