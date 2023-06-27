@@ -47,10 +47,10 @@ const screenResolver = async (
             }
         }
         if ('buttons' in screen) {
-            // extra = {
-            //     ...extra,
-            //     ...buttonResolver(ctx, screen)
-            // }   
+           extra = {
+                ...extra,
+                // ...buttonResolver(ctx, screen)
+           }
         }
         
         // TODO: не нравится реализация случайного видео
@@ -58,29 +58,17 @@ const screenResolver = async (
         const filePath = ctx.filePath.getFilePath(randomVideo)
 
         // TODO: реализация таймера на просмотр видео не нравится
-
         let message = await ctx.replyWithVideo({source: filePath}, extra)
 
         await sleep(4_000)
-
-        message = {
-            ...message,
-            ...buttonResolver(ctx, screen)
-        }
         
         // added buttons
-        // await ctx.telegram.editMessageMedia(
-        //     ctx.from.id,
-        //     message.message_id,
-        //     undefined,
-        //     {
-        //         caption: ctx.loc(screen.caption, ctx),
-        //         parse_mode: 'HTML',
-        //         media: {source: filePath},
-        //         type: 'video',
-        //     },
-        //     buttonResolver(ctx, screen)
-        // )
+        await ctx.telegram.editMessageReplyMarkup(
+            ctx.from.id,
+            message.message_id,
+            undefined,
+            buttonResolver(ctx, screen)
+        )
 
         bot.session.lastMessageId = message.message_id
     }

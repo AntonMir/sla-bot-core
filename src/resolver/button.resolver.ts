@@ -1,5 +1,5 @@
 import { BotContext } from "@src/ts/botContext"
-import { ScreenLike } from "@src/ts/ISLABot"
+import { ISLAButton, ScreenLike } from "@src/ts/ISLABot"
 import { Markup } from "telegraf"
 
 /**
@@ -12,23 +12,28 @@ const buttonResolver = (
     screen: ScreenLike,
 ) => {
     return {
-        reply_markup: { 
-            inline_keyboard: screen.buttons.map((buttonRow) => {
-                return buttonRow.map((buttonCol) => {
-                    if(buttonCol.action === 'referral') {
-                        return Markup.button.switchToChat(
-                            ctx.loc(buttonCol.text, ctx),
-                            `https://t.me/${ctx.botInfo.username}?start=${ctx.from.id}`
-                        )
-                    }
-                    return Markup.button.callback(
-                        ctx.loc(buttonCol.text, ctx),
-                        buttonCol.action
-                    )
-                })
+        inline_keyboard: screen.buttons.map((buttonRow) => {
+            return buttonRow.map((buttonCol) => {
+                return buttonPainter(ctx, buttonCol)
             })
-        }
+        })
     }
+}
+
+const buttonPainter = (
+    ctx: BotContext, 
+    buttonCol: ISLAButton
+) => {
+    if(buttonCol.action === 'referral') {
+        return Markup.button.switchToChat(
+            ctx.loc(buttonCol.text, ctx),
+            `https://t.me/${ctx.botInfo.username}?start=${ctx.from.id}`
+        )
+    }
+    return Markup.button.callback(
+        ctx.loc(buttonCol.text, ctx),
+        buttonCol.action
+    )
 }
 
 export default buttonResolver
