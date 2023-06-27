@@ -5,6 +5,7 @@ import { BotContext } from '@src/ts/botContext'
 import { logger } from '@src/utils/logger'
 import randomizer from '@src/utils/randomizer'
 import buttonResolver from './button.resolver'
+import { sleep } from '@src/utils/sleep'
 
 /**
  * Отрисовать один из экранов доступных в текущей сцене
@@ -46,18 +47,42 @@ const screenResolver = async (
             }
         }
         if ('buttons' in screen) {
-            extra = {
-                ...extra,
-                ...buttonResolver(ctx, screen)
-            }   
+            // extra = {
+            //     ...extra,
+            //     ...buttonResolver(ctx, screen)
+            // }   
         }
         
         // TODO: не нравится реализация случайного видео
         const randomVideo = randomizer.array(bot, screen.video)
         const filePath = ctx.filePath.getFilePath(randomVideo)
+
         // TODO: реализация таймера на просмотр видео не нравится
-        bot.session.watchStartTimer = Date.parse(String(new Date()))
-        bot.session.lastMessageId = (await ctx.replyWithVideo({source: filePath}, extra)).message_id
+
+        let message = await ctx.replyWithVideo({source: filePath}, extra)
+
+        await sleep(4_000)
+
+        message = {
+            ...message,
+            ...buttonResolver(ctx, screen)
+        }
+        
+        // added buttons
+        // await ctx.telegram.editMessageMedia(
+        //     ctx.from.id,
+        //     message.message_id,
+        //     undefined,
+        //     {
+        //         caption: ctx.loc(screen.caption, ctx),
+        //         parse_mode: 'HTML',
+        //         media: {source: filePath},
+        //         type: 'video',
+        //     },
+        //     buttonResolver(ctx, screen)
+        // )
+
+        bot.session.lastMessageId = message.message_id
     }
     if('action' in screen) {
         // если в строке установлены несколько скриптов, парсим каждый

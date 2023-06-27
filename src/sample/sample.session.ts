@@ -8,5 +8,4 @@ export const sampleSession: ISLASession = {
     videoReward: 10,
     videoLimit: 10,
     videoCounter: 0,
-    watchTimerLimit: 4 // минимальное время просмотра
 }
