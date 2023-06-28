@@ -43,13 +43,13 @@ export interface ISLAButton {
     text: string
     action: string
     deleteMessage?: boolean
-    delay?: number
 }
 
 export interface ISLAScreenBase {
     id: ScreenID
     buttons?: ISLAButton[][]
     action?: string
+    buttonDelay?: number
 }
 
 export interface ISLATextScreen extends ISLAScreenBase {

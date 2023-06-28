@@ -60,12 +60,12 @@ export const sampleScenes: ScenesLike[]  = [
                 id: '1.0.1',
                 video: 'videos',
                 caption: 'video_html',
+                buttonDelay: 5,
                 buttons: [
                     [
                         {
                             text: 'video_viewed_btn',
                             action: 'run script video-watch-reward',
-                            delay: 4
                         },
                     ],
                     [

@@ -14,26 +14,19 @@ const buttonResolver = (
     return {
         inline_keyboard: screen.buttons.map((buttonRow) => {
             return buttonRow.map((buttonCol) => {
-                return buttonPainter(ctx, buttonCol)
+                if(buttonCol.action === 'referral') {
+                    return Markup.button.switchToChat(
+                        ctx.loc(buttonCol.text, ctx),
+                        `https://t.me/${ctx.botInfo.username}?start=${ctx.from.id}`
+                    )
+                }
+                return Markup.button.callback(
+                    ctx.loc(buttonCol.text, ctx),
+                    buttonCol.action
+                )
             })
         })
     }
-}
-
-const buttonPainter = (
-    ctx: BotContext, 
-    buttonCol: ISLAButton
-) => {
-    if(buttonCol.action === 'referral') {
-        return Markup.button.switchToChat(
-            ctx.loc(buttonCol.text, ctx),
-            `https://t.me/${ctx.botInfo.username}?start=${ctx.from.id}`
-        )
-    }
-    return Markup.button.callback(
-        ctx.loc(buttonCol.text, ctx),
-        buttonCol.action
-    )
 }
 
 export default buttonResolver
