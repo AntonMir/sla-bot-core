@@ -107,7 +107,8 @@ export const sampleScenes: ScenesLike[]  = [
                     [
                         {
                             text: 'sure_btn',
-                            action: 'delete\n' + 'enter screen 3.3',
+                            action: 'if subscribed === true\n' 
+                                + 'enter screen 3.3\n' + 'enter screen 3.2',
                         },
                     ],
                 ],

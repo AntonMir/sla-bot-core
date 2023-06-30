@@ -31,7 +31,9 @@ class ScriptResolver {
         usedItem?: string
     ) {
         const actions = scriptValue.split('\n')
+
         for (const action of actions) {
+            console.log('action', action)
             await this.resolveOne(bot, ctx, scene, action, usedItem)
         }
     }
@@ -40,15 +42,27 @@ class ScriptResolver {
         bot: ISLABot,
         ctx: BotContext,
         scene: ISLABaseScene,
-        scriptValue: string,
+        script: string,
         usedItem?: string
     ) {
-        const scripts = scriptValue.split('\n')
-        const condition = conditionParser.parseIf(bot, scripts[0])
-        if(condition) {
-            await this.resolveOne(bot, ctx, scene, scripts[1] , usedItem)
+
+        const [strCondition, ...args] = script.split('\n')
+        let condition: boolean 
+
+        if(strCondition.includes('subscribed')) {
+            console.log('check subscribed not released!')
+            // TODO: реализовать проверку подписки на канал
+            // condition = ctx.channel.isSubscribed()
+            // bot.session.subscribed = ctx.channel.isSubscribed()
         } else {
-            await this.resolveOne(bot, ctx, scene, scripts[2], usedItem)
+        }
+
+        condition = conditionParser.parseBoolean(bot, strCondition)
+
+        if(condition) {
+            await this.resolveOne(bot, ctx, scene, args[0], usedItem)
+        } else {
+            await this.resolveOne(bot, ctx, scene, args[1], usedItem)
         }
     }
 
@@ -60,17 +74,14 @@ class ScriptResolver {
         usedItem?: string
     ) {
         const [command, ...args] = scriptValue.split(' ')
+
         switch (command) {
             case 'run': {
                 const entity = args[0]
                 if (entity !== 'script') return null
                 const scriptId: string = args[1]
                 const script: ISLAScript = this.getScript(scriptId)
-                if(script.text.includes('if')) {
-                    await this.resolveConditional(bot, ctx, scene, script.text)
-                } else {
-                    await this.resolveMany(bot, ctx, scene, script.text)
-                }
+                await this.resolveMany(bot, ctx, scene, script.text)
                 break
             }
             case 'sleep': {
@@ -99,7 +110,6 @@ class ScriptResolver {
                 break
             }
             case 'session': {
-                // if(usedItem === 'button') break
                 const entity: string = args[0]
                 const operator: string = args[1]
                 const value: string = args[2]
@@ -110,7 +120,6 @@ class ScriptResolver {
                         bot.session[entity] = arithmeticParser.parseStr(
                             `${bot.session[entity]} ${operator} ${value}`
                         )
-                        console.log(entity, prew, '>', bot.session[entity])
                         break
                     }
                     case 'object': {
@@ -120,10 +129,6 @@ class ScriptResolver {
                 }
                 break
             }
-            // case 'if': {
-            //     await this.resolveConditional(bot, ctx, scene, scriptValue)
-            //     break
-            // }
             case 'delete': {
                 const lastMessageId: number = +bot.session.lastMessageId
                 try {
@@ -133,15 +138,6 @@ class ScriptResolver {
                 }
                 break
             }
-            // case 'referral': {
-            //     // [
-            //     //     Markup.button.switchToChat(
-            //     //         ctx.loc._('SHARE_BUTTON'),
-            //     //         `https://t.me/${ctx.botObject.username}?start=${ctx.session.id}`
-            //     //     ),
-            //     // ],
-            //     break
-            // }
         }
     }
 }
