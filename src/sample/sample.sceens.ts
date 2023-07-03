@@ -63,7 +63,7 @@ export const sampleScenes: ScenesLike[]  = [
     // VIDEO (1.0)
     {
         id: 'video',
-        initialScreen: '1.3',
+        initialScreen: '1.0',
         screens: [
             {
                 id: '1.0',
