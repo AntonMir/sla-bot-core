@@ -5,11 +5,11 @@ import { sampleSession } from './sample.session'
 import { sampleScripts } from './sample.scripts'
 
 export const sampleBot: ISLABot = {
-    id: 'cat-fox-bot',
-    // token: '5696724086:AAGvBdCMS3bnMcNRAFbWwzmA_BOXlCnWEa0', // Бот Р00-Михаил
-    token: '6137535708:AAGE80COePesM9I0X0lzy5Rtvw3w4ApDO38', // Бот Р34-Антон
+    id: 'tik-tok-bot',
+    token: '6137535708:AAGE80COePesM9I0X0lzy5Rtvw3w4ApDO38',
     username: 'testBot_bot',
     // initialScene: '3.0',
+    // initialScene: 'mainMenu',
     initialScene: 'video',
     // initialScene: 'agreement',
     scenes: sampleScenes,

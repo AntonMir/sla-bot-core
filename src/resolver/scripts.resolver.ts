@@ -33,7 +33,6 @@ class ScriptResolver {
         const actions = scriptValue.split('\n')
 
         for (const action of actions) {
-            console.log('action', action)
             await this.resolveOne(bot, ctx, scene, action, usedItem)
         }
     }
@@ -45,11 +44,17 @@ class ScriptResolver {
         script: string,
         usedItem?: string
     ) {
-
         const [strCondition, ...args] = script.split('\n')
         let condition: boolean 
 
-        if(strCondition.includes('subscribed')) {
+        // если мы обращаемся ко времени просмотра, вычисляем его
+        // актуально для сцены с видео 
+         if(script.includes('_watchedTime')) {
+            const currentTime = Date.parse(String(new Date()))
+            bot.session._watchedTime = (currentTime - bot.session.startWatching) / 1000
+        }
+
+        if(strCondition.includes('_subscribed')) {
             console.log('check subscribed not released!')
             // TODO: реализовать проверку подписки на канал
             // condition = ctx.channel.isSubscribed()
@@ -73,6 +78,7 @@ class ScriptResolver {
         scriptValue: string,
         usedItem?: string
     ) {
+
         const [command, ...args] = scriptValue.split(' ')
 
         switch (command) {
@@ -81,6 +87,10 @@ class ScriptResolver {
                 if (entity !== 'script') return null
                 const scriptId: string = args[1]
                 const script: ISLAScript = this.getScript(scriptId)
+                if(script.text.includes('if')) {
+                    await ctx.resolver.resolveConditional(bot, ctx, scene, script.text, 'button')
+                    break
+                }
                 await this.resolveMany(bot, ctx, scene, script.text)
                 break
             }
@@ -104,6 +114,17 @@ class ScriptResolver {
                     }
                     case 'popups': {
                         await popupResolver(bot, ctx, scene, scene.popups, entityId)
+                        break
+                    }
+                }
+                break
+            }
+            case 'editTo': {
+                const entity: string = args[0]
+                const entityId: string = args[1]
+                switch (entity) {
+                    case 'screen': {
+                        await screenResolver(bot, ctx, scene, scene.screens, entityId, 'editTo')
                         break
                     }
                 }
@@ -136,6 +157,10 @@ class ScriptResolver {
                 } catch(e) {
                     console.log('delete ERROR>', e)
                 }
+                break
+            }
+            case 'if': {
+                await ctx.resolver.resolveConditional(bot, ctx, scene, scriptValue, 'button')
                 break
             }
         }

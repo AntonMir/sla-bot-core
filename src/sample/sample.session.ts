@@ -8,5 +8,6 @@ export const sampleSession: ISLASession = {
     videoReward: 10,
     videoLimit: 10,
     videoCounter: 0,
-    subscribed: false
+    _subscribed: true,
+    _invitedFriends: []
 }

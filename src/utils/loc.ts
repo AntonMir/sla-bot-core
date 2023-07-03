@@ -9,14 +9,16 @@ const localeFormatter = (
     ctx: BotContext,
     bot: ISLABot
 ): string => {
-    const foundEntities = [...txt.matchAll(/\{([a-zA-Z_]*)\.([a-zA-Z_]*)}/g)]
+    const foundEntities = [...txt.matchAll(/\{([a-zA-Z_]*)\.*([a-zA-Z_]*)\.*([a-zA-Z_]*)}/g)]
     const entities = []
 
     for (const rawEntity of foundEntities) {
         const namespace = rawEntity[1]
         const variable = rawEntity[2]
+        const param = rawEntity[3]
         const fullMatch = rawEntity[0]
-        
+
+
         let value = ''
         switch (namespace) {
             case 'user': {
@@ -33,8 +35,25 @@ const localeFormatter = (
                     value = bot.session[variable].length
                     break
                 }
+                if(variable === '_referralLink') {
+                    value = `https://t.me/${ctx.botInfo.username}?start=${ctx.from.id}`
+                    break
+                }
+                if(variable === '_channelLink') {
+                    // TODO: затычка? потом поправить
+                    // value = ctx.channel.link.replace('+', 'joinchat/')
+                    value = `https://t.me/R34AntonTestChannel`
+                    break
+                }
+                
                 value = ResolvingErrorValue
                 break
+            }
+            case 'extra': {
+                if(variable === 'currentDate') {
+                    value = (new Date()).toLocaleDateString()
+                    break
+                }
             }
             case 'loc': {
                 value = bot.locale.find((el) => el.id === variable)?.content 
