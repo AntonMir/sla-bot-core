@@ -112,7 +112,7 @@ class ScriptResolver {
                         await screenResolver(bot, ctx, scene, scene.screens, entityId)
                         break
                     }
-                    case 'popups': {
+                    case 'popup': {
                         await popupResolver(bot, ctx, scene, scene.popups, entityId)
                         break
                     }

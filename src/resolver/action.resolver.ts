@@ -3,7 +3,7 @@ import { BotContext } from '@src/ts/botContext'
 import { ISLABaseScene, ISLABot } from '@src/ts/ISLABot'
 import { Update, CallbackQuery } from 'telegraf/types'
 
-const actionResolver = (
+const actionsResolver = (
     bot: ISLABot, 
     sceneInstance: Scenes.BaseScene<BotContext>, 
     scene: ISLABaseScene
@@ -18,4 +18,4 @@ const actionResolver = (
     })
 }
 
-export default actionResolver
+export default actionsResolver

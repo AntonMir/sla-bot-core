@@ -3,6 +3,7 @@ import { ISLABot, PopupLike, ScenesLike, ScreenLike } from '@src/ts/ISLABot'
 import { Markup } from 'telegraf'
 import { BotContext } from '@src/ts/botContext'
 import { logger } from '@src/utils/logger'
+import { sleep } from '@src/utils/sleep'
 
 /**
  * Отрисовать один из экранов доступных в текущей сцене
@@ -21,7 +22,16 @@ const popupResolver = async (
     logger.info(`[${ctx.from.id}] open popup ${popupId}`)
     const popup = popups.find((po) => po.id === popupId)
     if ('text' in popup) {
-        await ctx.answerCbQuery(ctx.loc(popup.text, ctx), {show_alert: true})
+        try {
+            // const message = (await ctx.reply(ctx.loc(popup.text, ctx))).message_id
+            // await sleep(3000)
+            // try {
+            //     await ctx.deleteMessage(message)
+            // }catch(e) {}
+            return ctx.answerCbQuery(ctx.loc(popup.text, ctx), {show_alert: true})
+        } catch(error) {
+            console.log('Error', error)
+        }
     }
 }
 

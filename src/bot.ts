@@ -8,6 +8,7 @@ import { FilePathService } from '@src/utils/filePath'
 import actionResolver from '@src/resolver/action.resolver'
 import { logger } from '@src/utils/logger'
 import botStart from './bot.start'
+import hearResolver from './resolver/hear.resolver'
 
 
 export const setupBot = (bot: ISLABot): Telegraf => {
@@ -38,6 +39,8 @@ export const setupBot = (bot: ISLABot): Telegraf => {
         // парсинг button action для каждой сцены
         actionResolver(bot, sceneInstance, scene)
 
+        hearResolver(bot, sceneInstance, scene)
+        
         scenes.push([scene.id, sceneInstance])
     }
     

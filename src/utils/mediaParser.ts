@@ -1,7 +1,7 @@
 import { BotContext } from "@src/ts/botContext";
 import { ISLABot, ISLALocale } from "@src/ts/ISLABot";
 
-class Randomizer {
+class MediaParser {
 
     /**
      * 
@@ -10,7 +10,7 @@ class Randomizer {
      * @param {string} listId - id списка медиа элементов в локализации 
      * @returns 
      */
-    array(bot: ISLABot, listId: string): string {
+    getFileName(bot: ISLABot, listId: string): string {
         try {
             const locale: ISLALocale = bot.locale.find((el) => el.id === listId)
             const content: string[] | string = locale.content || locale.contentArr
@@ -46,4 +46,4 @@ class Randomizer {
 
 }
 
-export default new Randomizer()
+export default new MediaParser()

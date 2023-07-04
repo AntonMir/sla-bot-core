@@ -16,9 +16,15 @@ export interface ISLAScript {
 
 export type ScenesLike = ISLABaseScene
 
-export type ScreenLike = ISLATextScreen | ISLAImageScreen | ISLAVideoScreen
+export type ScreenLike = ISLATextScreen 
+                        | ISLAImageScreen 
+                        | ISLAVideoScreen 
+                        | ISLAGifScreen
 
-export type PopupLike = ISLATextScreen | ISLAImageScreen | ISLAVideoScreen
+export type PopupLike = ISLATextScreen 
+                        | ISLAImageScreen 
+                        | ISLAVideoScreen 
+                        | ISLAGifScreen
 
 export type BotID = string
 
@@ -50,6 +56,8 @@ export interface ISLAScreenBase {
     buttons?: ISLAButton[][]
     action?: string
     buttonDelay?: number
+    hears?: string
+    actionAfterHear?: LocaleID
 }
 
 export interface ISLATextScreen extends ISLAScreenBase {
@@ -63,6 +71,11 @@ export interface ISLAImageScreen extends ISLAScreenBase {
 
 export interface ISLAVideoScreen extends ISLAScreenBase {
     video: LocaleID
+    caption?: LocaleID
+}
+
+export interface ISLAGifScreen extends ISLAScreenBase {
+    gif: LocaleID
     caption?: LocaleID
 }
 

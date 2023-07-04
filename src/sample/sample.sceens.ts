@@ -317,11 +317,145 @@ export const sampleScenes: ScenesLike[]  = [
                     [
                         {
                             text: 'get_partner_reward_btn',
-                            action: 'delete\n' + 'enter screen 2.4',
+                            action: 'run script get_partner_reward_conditional',
                         },
                     ],
                 ],
             },
+            {
+                id: '2.4',
+                text: 'income_partner_reward_html',
+                buttons: [
+                    [
+                        {
+                            text: 'earn_instruction_btn',
+                            action: 'channel'
+                        },
+                    ],
+                    [
+                        {
+                            text: 'reject_of_knowledge_btn',
+                            action: 'delete\n' + 'enter scene rules',
+                        },
+                    ],
+                ],
+            },
+        ],
+        popups: [
+            {
+                id: '2.3',
+                text: 'forgot_subscribe_popups_html',
+            }
+        ]
+    },
+    // Payout (4.2.1)
+    {
+        id: 'payout',
+        initialScreen: '4.2.1',
+        screens: [
+            {
+                id: '4.2.1',
+                gif: 'money-gif',
+                caption: 'choice_of_payment_system_html',
+                buttons: [
+                    [
+                        {
+                            text: 'tel_btn',
+                            action: 'delete\n' + 'enter screen 4.2.2'
+                        },
+                        {
+                            text: 'paypal_btn',
+                            action: 'delete\n' + 'enter screen 4.2.2'
+                        },
+                    ],
+                    [
+                        {
+                            text: 'binance_btn',
+                            action: 'delete\n' + 'enter screen 4.2.2',
+                        },
+                        {
+                            text: 'card_btn',
+                            action: 'delete\n' + 'enter screen 4.2.2',
+                        },
+                    ],
+                    [
+                        {
+                            text: 'back_btn',
+                            action: 'delete\n' + 'enter scene mainMenu',
+                        },
+                    ],
+                    [
+                        {
+                            text: 'back_btn',
+                            action: 'enter popup 4.2.4',
+                        },
+                    ],
+                ],
+            },
+            {
+                id: '4.2.2',
+                text: 'enter_details_html',
+                hears: 'paymentDetails',
+                actionAfterHear: 'delete\n' + 'enter screen 4.2.3',
+                buttons: [
+                    [
+                        {
+                            text: 'back_btn',
+                            action: 'delete\n' + 'enter scene mainMenu'
+                        }
+                    ],
+                ]
+            },
+            {
+                id: '4.2.3',
+                text: 'enter_payout_sum_html',
+                hears: 'paymentSum',
+                actionAfterHear: 'run script check_valid_payout_sum_condition',
+                buttons: [
+                    [
+                        {
+                            text: 'back_btn',
+                            action: 'delete\n' + 'enter scene mainMenu'
+                        }
+                    ], 
+                ]
+            },
+            {
+                id: '4.2.5',
+                text: 'output_request_in_progress_html',
+                buttons: [
+                    [
+                        {
+                            text: 'back_btn',
+                            action: 'delete\n' + 'enter scene mainMenu'
+                        }
+                    ],
+                ]
+            },
+            {
+                id: '4.2.5.1',
+                text: 'output_request_error_html',
+                buttons: [
+                    [
+                        {
+                            text: 'get_big_sub_reward_btn',
+                            action: 'channel'
+                        }
+                    ],
+                    [
+                        {
+                            text: 'back_btn',
+                            action: 'delete\n' + 'enter scene mainMenu'
+                        }
+                    ],
+                ]
+            },
+        ],
+        popups: [
+            {
+                id: '4.2.4',
+                text: 'invalid_payout_sum_html',
+            }
         ]
     }
 ]

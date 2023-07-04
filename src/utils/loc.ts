@@ -1,5 +1,6 @@
 import { BotContext } from '../ts/botContext'
 import { ISLABot } from '../ts/ISLABot'
+import { arithmeticParser } from './parser'
 
 const ResolvingErrorValue = '<b>*RESOLVING_ERROR*</b>'
 
@@ -9,14 +10,20 @@ const localeFormatter = (
     ctx: BotContext,
     bot: ISLABot
 ): string => {
-    const foundEntities = [...txt.matchAll(/\{([a-zA-Z_]*)\.*([a-zA-Z_]*)\.*([a-zA-Z_]*)}/g)]
+    // const regExp = /\{([a-zA-Z_]*)\.*([a-zA-Z_]*)\.*([a-zA-Z_]*)}/g
+    // const regExp = /\{(([a-zA-Z_]*)\.*([a-zA-Z_]*) ?(\+|\-*) ?([0-9]*))}/g
+    const regExp = /\{?([0-9]*) ?(\+|\-*) ?(([a-zA-Z_]*)\.*([a-zA-Z_]*) ?(\+|\-*) ?([0-9]*))}/g
+    
+    const foundEntities = [...txt.matchAll(regExp)]
     const entities = []
 
     for (const rawEntity of foundEntities) {
-        const namespace = rawEntity[1]
-        const variable = rawEntity[2]
-        const param = rawEntity[3]
         const fullMatch = rawEntity[0]
+        const mathValue_before = rawEntity[1]
+        const mathOperationSymbol = rawEntity[2] || rawEntity[6]
+        const namespace = rawEntity[4]
+        const variable = rawEntity[5]
+        const mathValue_after = rawEntity[7]
 
 
         let value = ''
@@ -28,6 +35,16 @@ const localeFormatter = (
             case 'session': {
                 const typeValue = typeof bot.session[variable]
                 if(typeValue === 'string' || typeValue === 'number' ) {
+                    if(mathOperationSymbol) {
+                        value = mathValue_before 
+                            ? String(arithmeticParser.parseStr(
+                                `${mathValue_before} ${mathOperationSymbol} ${bot.session[variable]}`
+                            ))
+                            : String(arithmeticParser.parseStr(
+                                `${bot.session[variable]} ${mathOperationSymbol} ${mathValue_after}`
+                            ))
+                        break
+                    }
                     value = bot.session[variable]
                     break
                 } 
