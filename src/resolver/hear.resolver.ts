@@ -20,12 +20,7 @@ const hearResolver = (
         }
 
         const currentScreen = filteredScenes[0]
-
         bot.session[`${currentScreen.hears}`] = userInput
-
-        // console.log('bot.session', bot.session)
-
-        console.log('currentScreen.actionAfterHear', currentScreen.actionAfterHear)
 
         // парсинг действий action после успешной прослушки
         if(currentScreen.actionAfterHear.includes('if')) {

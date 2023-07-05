@@ -10,8 +10,6 @@ const localeFormatter = (
     ctx: BotContext,
     bot: ISLABot
 ): string => {
-    // const regExp = /\{([a-zA-Z_]*)\.*([a-zA-Z_]*)\.*([a-zA-Z_]*)}/g
-    // const regExp = /\{(([a-zA-Z_]*)\.*([a-zA-Z_]*) ?(\+|\-*) ?([0-9]*))}/g
     const regExp = /\{?([0-9]*) ?(\+|\-*) ?(([a-zA-Z_]*)\.*([a-zA-Z_]*) ?(\+|\-*) ?([0-9]*))}/g
     
     const foundEntities = [...txt.matchAll(regExp)]
@@ -57,9 +55,7 @@ const localeFormatter = (
                     break
                 }
                 if(variable === '_channelLink') {
-                    // TODO: затычка? потом поправить
-                    // value = ctx.channel.link.replace('+', 'joinchat/')
-                    value = `https://t.me/R34AntonTestChannel`
+                    value = ctx.channel.link.replace('+', 'joinchat/')
                     break
                 }
                 

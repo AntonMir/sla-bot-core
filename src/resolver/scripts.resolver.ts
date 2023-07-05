@@ -49,20 +49,17 @@ class ScriptResolver {
 
         // если мы обращаемся ко времени просмотра, вычисляем его
         // актуально для сцены с видео 
-         if(script.includes('_watchedTime')) {
+        if(script.includes('_watchedTime')) {
             const currentTime = Date.parse(String(new Date()))
             bot.session._watchedTime = (currentTime - bot.session.startWatching) / 1000
         }
-
+        
         if(strCondition.includes('_subscribed')) {
-            console.log('check subscribed not released!')
-            // TODO: реализовать проверку подписки на канал
-            // condition = ctx.channel.isSubscribed()
-            // bot.session.subscribed = ctx.channel.isSubscribed()
+            condition = await ctx.channel.isSubscribed(ctx)
+            console.log('condition SUB', condition)
         } else {
+            condition = conditionParser.parseBoolean(bot, strCondition)
         }
-
-        condition = conditionParser.parseBoolean(bot, strCondition)
 
         if(condition) {
             await this.resolveOne(bot, ctx, scene, args[0], usedItem)

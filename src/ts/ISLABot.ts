@@ -7,6 +7,8 @@ export interface ISLABot {
     locale: ISLALocale[]
     scripts: ISLAScript[]
     session: ISLASession
+    flowTracking: any
+    channel: string
 }
 
 export interface ISLAScript {

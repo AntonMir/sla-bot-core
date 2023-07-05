@@ -175,7 +175,7 @@ export const sampleScenes: ScenesLike[]  = [
                     [
                         {
                             text: 'get_first_reward_btn',
-                            action: 'delete\n' + 'enter scene 2.0',
+                            action: 'delete\n' + 'enter scene partnerReward',
                         },
                     ],
                     [
@@ -382,12 +382,6 @@ export const sampleScenes: ScenesLike[]  = [
                         {
                             text: 'back_btn',
                             action: 'delete\n' + 'enter scene mainMenu',
-                        },
-                    ],
-                    [
-                        {
-                            text: 'back_btn',
-                            action: 'enter popup 4.2.4',
                         },
                     ],
                 ],

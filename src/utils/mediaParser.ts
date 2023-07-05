@@ -32,6 +32,7 @@ class MediaParser {
                 (el: string) => !bot.session[`_watched-${listId}`].includes(el)
             );
 
+            // Отдаем случайный элемент массива
             const randomEl = filteredEl[Math.floor(Math.random() * filteredEl.length)];
             
             // save watched element to session

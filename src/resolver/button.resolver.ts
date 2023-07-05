@@ -23,9 +23,7 @@ const buttonResolver = (
                 if(buttonCol.action === 'channel') {
                     return Markup.button.url(
                         ctx.loc(buttonCol.text, ctx),
-                        // TODO: добавить в контекст ссылку на канал
-                        // ctx.channel.link.replace('+', 'joinchat/')
-                        'https://t.me/R34AntonTestChannel'
+                        ctx.channel.link.replace('+', 'joinchat/')
                     )
                 }
                 return Markup.button.callback(

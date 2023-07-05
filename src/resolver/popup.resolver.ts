@@ -4,6 +4,7 @@ import { Markup } from 'telegraf'
 import { BotContext } from '@src/ts/botContext'
 import { logger } from '@src/utils/logger'
 import { sleep } from '@src/utils/sleep'
+import { flow } from '@src/utils/flow'
 
 /**
  * Отрисовать один из экранов доступных в текущей сцене
@@ -19,18 +20,23 @@ const popupResolver = async (
     popups: PopupLike[],
     popupId: string,
 ) => {
+    await flow(ctx, popupId)
     logger.info(`[${ctx.from.id}] open popup ${popupId}`)
     const popup = popups.find((po) => po.id === popupId)
     if ('text' in popup) {
         try {
-            // const message = (await ctx.reply(ctx.loc(popup.text, ctx))).message_id
-            // await sleep(3000)
-            // try {
-            //     await ctx.deleteMessage(message)
-            // }catch(e) {}
-            return ctx.answerCbQuery(ctx.loc(popup.text, ctx), {show_alert: true})
-        } catch(error) {
-            console.log('Error', error)
+            // оригинальный пуш
+            return ctx.answerCbQuery(
+                ctx.loc(popup.text, ctx),
+                {show_alert: true}
+            )
+        } catch(e) {
+            // альтернатива: пуша после пользовательского ввода
+            const message = await ctx.reply(ctx.loc(popup.text, ctx))
+            await sleep(5000)
+            try {
+                await ctx.deleteMessage(message.message_id)
+            }catch(e) {}
         }
     }
 }

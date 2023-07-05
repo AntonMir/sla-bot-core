@@ -7,6 +7,7 @@ import mediaParser from '@src/utils/mediaParser'
 import buttonResolver from './button.resolver'
 import { sleep } from '@src/utils/sleep'
 import { InlineKeyboardButton, InlineKeyboardMarkup } from 'telegraf/types'
+import { flow } from '@src/utils/flow'
 
 /**
  * Отрисовать один из экранов доступных в текущей сцене
@@ -22,7 +23,7 @@ const screenResolver = async (
     screenId: string,
     action: string = 'enter' // enter | editTo
 ) => {
-    
+    await flow(ctx, screenId)
     logger.info(`[${ctx.from.id}] enter screen ${screenId}`)
     const screen = screens.find((sc) => sc.id === screenId)
     

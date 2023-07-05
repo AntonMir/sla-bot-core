@@ -1,43 +1,43 @@
+import { TelegramChannel } from "@src/db/models/channel";
+import { BotContext } from "@src/ts/botContext";
+import { logger } from "./logger";
+
 export class ChannelObject {
+    private _id: string;
+    private channel: any;
 
-
-
-
-    constructor(_id) {
-        this._id = _id
-        this.fetchChannel()
-        const interval = Meteor.setInterval(() => {
-            this.fetchChannel()
-        }, 1000 * 60 * 5)
-        // Graceful shutdown
-        process.once('SIGINT', () => Meteor.clearInterval(interval))
-        process.once('SIGTERM', () => Meteor.clearInterval(interval))
+    constructor(_id: string) {
+        this._id = _id;
+        this.fetchChannel();
+        const interval = setInterval(() => {
+            this.fetchChannel();
+        }, 1000 * 60 * 5);
     }
 
-    async fetchChannel() {
-        this.channel = await TelegramChannels.findOne({"_id": this._id})
+    async fetchChannel(): Promise<void> {
+        this.channel = await TelegramChannel.findById(this._id);
     }
 
     get title() {
-        return this.channel?.title
+        return this.channel?.title;
     }
 
     get link() {
-        return this.channel?.link
+        return this.channel?.link;
     }
 
     get telegramId() {
-        return this.channel?.channelId
+        return this.channel?.channelId;
     }
 
-    async isSubscribed(ctx) {
-        const { id } = ctx.from
+    async isSubscribed(ctx: BotContext) {
+        const { id } = ctx.from;
         try {
-            const res = await ctx.telegram.getChatMember(this.telegramId, id)
-            return res.status !== 'left'
+            const res = await ctx.telegram.getChatMember(this.telegramId, id);
+            return res.status !== 'left';
         } catch (e) {
-            console.log(e)
-            return false
+            logger.error(e);
+            return false;
         }
     }
 }

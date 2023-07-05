@@ -398,16 +398,5 @@ export const sampleLocale: ISLALocale[]  = [
         id: 'get_big_sub_reward_btn',
         content: `Забрать 10 000€`
     },
-    {
-        id: 'escape',
-        content: 'ПРОПУСТИТЬ'
-    },
-    {
-        id: 'push',
-        content: 'ПУШ'
-    }
-
-
-
 ]
 

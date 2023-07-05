@@ -8,14 +8,17 @@ export const sampleBot: ISLABot = {
     id: 'tik-tok-bot',
     token: '6137535708:AAGE80COePesM9I0X0lzy5Rtvw3w4ApDO38',
     username: 'testBot_bot',
+    channel: `BLYr6965stNY56NNP`,
+
     // initialScene: '3.0',
     // initialScene: 'mainMenu',
     // initialScene: 'video',
     // initialScene: 'partnerReward',
-    initialScene: 'payout',
-    // initialScene: 'agreement',
+    // initialScene: 'payout',
+    initialScene: 'agreement',
     scenes: sampleScenes,
     locale: sampleLocale,
     scripts: sampleScripts,
-    session: sampleSession
+    session: sampleSession,
+    flowTracking: true,
 }
