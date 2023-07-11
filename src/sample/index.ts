@@ -3,6 +3,7 @@ import { sampleLocale } from './sample.locale'
 import { sampleScenes } from './sample.sceens'
 import { sampleSession } from './sample.session'
 import { sampleScripts } from './sample.scripts'
+import { samplePushes } from './sample.pushes'
 
 export const sampleBot: ISLABot = {
     id: 'tik-tok-bot',
@@ -10,15 +11,11 @@ export const sampleBot: ISLABot = {
     username: 'testBot_bot',
     channel: `BLYr6965stNY56NNP`,
 
-    // initialScene: '3.0',
-    // initialScene: 'mainMenu',
-    // initialScene: 'video',
-    // initialScene: 'partnerReward',
-    // initialScene: 'payout',
     initialScene: 'agreement',
     scenes: sampleScenes,
     locale: sampleLocale,
     scripts: sampleScripts,
     session: sampleSession,
+    pushes: samplePushes,
     flowTracking: true,
 }

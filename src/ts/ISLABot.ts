@@ -7,6 +7,7 @@ export interface ISLABot {
     locale: ISLALocale[]
     scripts: ISLAScript[]
     session: ISLASession
+    pushes: PushesLike[]
     flowTracking: any
     channel: string
 }
@@ -28,6 +29,7 @@ export type PopupLike = ISLATextScreen
                         | ISLAVideoScreen 
                         | ISLAGifScreen
 
+
 export type BotID = string
 
 export type SceneID = string
@@ -40,17 +42,21 @@ export interface ISLASession {
     [key: string]: any
 }
 
+export interface PushesLike extends ISLAScreenBase {
+    text: LocaleID
+    timer: number,
+}
+
 export interface ISLABaseScene {
-    id: string
+    id: LocaleID
     initialScreen: ScreenID
     screens: ScreenLike[]
     popups?: PopupLike[]
 }
 
 export interface ISLAButton {
-    text: string
+    text: LocaleID
     action: string
-    deleteMessage?: boolean
 }
 
 export interface ISLAScreenBase {

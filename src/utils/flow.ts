@@ -5,10 +5,10 @@ export const flow = async (
     ctx: BotContext,
     newState: string
 ): Promise<void> => {
-    if (!ctx.bot.flowTracking) return;
+    if (!ctx.botObject.flowTracking) return;
     const { flowState = 'start' } = ctx.session;
     const profile = {
-        bot: ctx.bot.username,
+        bot: ctx.botObject.username,
         userId: ctx.from.id,
         from: flowState,
         to: newState,

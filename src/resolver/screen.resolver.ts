@@ -23,6 +23,11 @@ const screenResolver = async (
     screenId: string,
     action: string = 'enter' // enter | editTo
 ) => {
+
+    try {
+        await ctx.telegram.deleteMessage(ctx.from.id , ctx.session.lastPushId)
+    } catch(e) {}
+
     await flow(ctx, screenId)
     logger.info(`[${ctx.from.id}] enter screen ${screenId}`)
     const screen = screens.find((sc) => sc.id === screenId)
@@ -72,7 +77,7 @@ const screenResolver = async (
     if('video' in screen) {
         let extra: ExtraVideo = {}
         const randomVideo = mediaParser.getFileName(bot, screen.video)
-        const videoPath = ctx.filePath.getFilePath(randomVideo)
+        const videoPath = await ctx.fileId.getFileId(randomVideo)
 
         // если есть подпись под видео
         if(screen.caption && screen.caption.length > 0) {
@@ -86,7 +91,7 @@ const screenResolver = async (
         }
 
         // отрисуем случайное видео
-        let message = await ctx.replyWithVideo({source: videoPath}, extra)
+        let message = await ctx.replyWithVideo(videoPath, extra)
 
         // если есть кнопки и есть задержка
         if (screen.buttons && screen.buttons.length > 0 && screen.buttonDelay) {
@@ -110,7 +115,7 @@ const screenResolver = async (
         let extra: ExtraAnimation = {}
 
         const gifName = mediaParser.getFileName(bot, screen.gif)
-        const gifPath = ctx.filePath.getFilePath(gifName)
+        const gifPath = await ctx.fileId.getFileId(gifName)
 
         // если есть подпись под gif
         if(screen.caption && screen.caption.length > 0) {
@@ -124,7 +129,7 @@ const screenResolver = async (
         }
 
         // отрисуем gif
-        let message = await ctx.replyWithAnimation({source: gifPath}, extra)
+        let message = await ctx.replyWithAnimation(gifPath, extra)
 
         // если есть кнопки и есть задержка
         if (screen.buttons && screen.buttons.length > 0 && screen.buttonDelay) {

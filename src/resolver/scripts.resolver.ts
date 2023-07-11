@@ -132,12 +132,21 @@ class ScriptResolver {
                 const operator: string = args[1]
                 const value: string = args[2]
 
+
+
                 switch(typeof bot.session[entity]) {
                     case 'number': {
                         const prew = bot.session[entity]
                         bot.session[entity] = arithmeticParser.parseStr(
                             `${bot.session[entity]} ${operator} ${value}`
                         )
+                        break
+                    }
+                    case 'boolean': {
+                        if(operator === '=') {
+                            bot.session[entity] = !!value
+                        }
+                        console.log('bot.session[entity]', bot.session[entity])
                         break
                     }
                     case 'object': {

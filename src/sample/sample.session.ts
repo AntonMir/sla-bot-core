@@ -2,7 +2,7 @@ import { ISLASession } from '@src/ts/ISLABot'
 
 // параметры задаем без вложенности
 export const sampleSession: ISLASession = {
-    balance: 138,
+    balance: 0,
     commentCounter: 0,
     agreement: false,
     videoReward: 10,

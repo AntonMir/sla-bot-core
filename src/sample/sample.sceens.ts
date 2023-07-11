@@ -13,8 +13,9 @@ export const sampleScenes: ScenesLike[]  = [
                     [
                         {
                             text: 'agreement_btn',
-                            action: 'session agreement = true\n' + 'delete\n' + 'enter scene rules\n',
-                            deleteMessage: true,
+                            action: 'session agreement = true\n' 
+                                + 'delete\n' 
+                                + 'enter scene rules\n',
                         },
                     ],
                 ],
@@ -74,7 +75,6 @@ export const sampleScenes: ScenesLike[]  = [
                 id: '1.0.1',
                 video: 'videos',
                 caption: 'video_html',
-                // buttonDelay: 5,
                 buttons: [
                     [
                         {
@@ -86,7 +86,6 @@ export const sampleScenes: ScenesLike[]  = [
                         {
                             text: 'finish_watching_btn',
                             action: 'delete\n' + 'enter scene 3.0',
-                            // deleteMessage: true, // TODO: выпилить
                         },
                     ],
                 ],
@@ -122,6 +121,7 @@ export const sampleScenes: ScenesLike[]  = [
             {
                 id: '1.4',
                 text: 'after_five_video_reward_twice_html',
+                // buttonDelay: 5,
                 buttons: [
                     [
                         {
@@ -335,7 +335,7 @@ export const sampleScenes: ScenesLike[]  = [
                     [
                         {
                             text: 'reject_of_knowledge_btn',
-                            action: 'delete\n' + 'enter scene rules',
+                            action: 'delete\n' + 'enter scene videos',
                         },
                     ],
                 ],

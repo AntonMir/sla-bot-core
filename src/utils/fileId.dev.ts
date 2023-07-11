@@ -1,7 +1,8 @@
+import { StorageItem } from '@src/db/models/storageItems';
+import path = require('path');
 import { Message } from 'telegraf/types';
-import { StorageItem } from '../models/storageItems';
 
-export class FileIdService {
+export class DevFileIdService {
     private botId: string;
     private storage: Record<string, any>;
 
@@ -12,19 +13,9 @@ export class FileIdService {
 
     async getFileId(fileId: string) {
         if (this.storage[fileId]) return this.storage[fileId];
-        const item = await StorageItem.findOne({ _id: fileId });
-        if (!item)
-            console.error('BotPlatform: FileIdService: File not found', {
-                botId: this.botId,
-            });
-        if (!item.fileId || !item.fileId?.[this.botId]) {
-            return {
-                source: item.path,
-            };
-        } else {
-            this.storage[fileId] = item.fileId[this.botId];
-            return item.fileId[this.botId];
-        }
+        return {
+            source: path.join(process.cwd(), 'assets', fileId)
+        };
     }
 
     // sentMessage is response of ctx.replyWithPhoto, ctx.replyWithVideo, ctx.replyWithDocument

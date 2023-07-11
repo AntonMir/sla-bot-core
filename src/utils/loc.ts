@@ -95,6 +95,7 @@ const localeFormatter = (
 export const localeStorage = (bot: ISLABot) => {
     return (key: string, ctx: BotContext) => {
         const loc = bot.locale.find((el) => el.id === key)
+
         if (loc.formatted) {
             return localeFormatter(loc.content, ctx, bot)
         }

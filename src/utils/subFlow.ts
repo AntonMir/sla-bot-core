@@ -3,7 +3,7 @@ import { BotContext } from "@src/ts/botContext";
 
 
 export const subFlow = async (ctx: BotContext) => {
-    if (!ctx.bot.flowTracking) return;
+    if (!ctx.botObject.flowTracking) return;
     const schema = {
         date: new Date(),
         // @ts-ignore

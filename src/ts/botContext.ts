@@ -1,8 +1,9 @@
-import { Context, Scenes } from 'telegraf'
+import { Context, Scenes, Telegraf } from 'telegraf'
 import { ScriptResolver } from '@src/resolver'
-import { FilePathService } from '@src/utils/filePath'
 import { ISLABot } from './ISLABot'
 import { ChannelObject } from '@src/utils/channel'
+import FileIdService from '@src/utils/fileId'
+import { DevFileIdService } from '@src/utils/fileId.dev'
 
 interface Session extends Scenes.SceneSessionData {
     __scenes: Scenes.SceneSessionData
@@ -10,11 +11,12 @@ interface Session extends Scenes.SceneSessionData {
 }
 
 export interface BotContext extends Context {
-    loc: (key: string, ctx: BotContext) => string
-    filePath: FilePathService,
+    loc: (key: string, ctx: BotContext | Partial<BotContext>) => string
     resolver: ScriptResolver
     session: Session
     scene: Scenes.SceneContextScene<BotContext>
-    bot: ISLABot
+    botObject: ISLABot
     channel: ChannelObject
+    fileId: FileIdService | DevFileIdService
+    startPayload?: string
 }

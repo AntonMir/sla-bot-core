@@ -8,7 +8,7 @@ import { Markup } from "telegraf"
  * @param {ScreenLike} screen текущий экран
  */
 const buttonResolver = (
-    ctx: BotContext,
+    ctx: BotContext | Partial<BotContext>,
     screen: ScreenLike,
 ) => {
     return {

@@ -3,12 +3,11 @@ import { BotContext } from '@src/ts/botContext'
 import { ISLABot, ISLASession } from '@src/ts/ISLABot'
 import { BotUsers } from '@src/db/models/botUser'
 
-const getSessionKey = ({ from }, botObject: any) => {
-    const bot = botObject._id;
+const getSessionKey = ({ from }, botObject: ISLABot) => {
+    const bot = botObject.id;
     if (from == null) {
         return null;
     }
-
     return { id: from.id, bot };
 };
 
