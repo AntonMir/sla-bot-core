@@ -12,9 +12,12 @@ const botStart = (bot: Telegraf<BotContext>, initialScene: SceneID, session: ISL
 
         if(!ctx.session.agreement) {
             ctx.session = {
+                _invitedFriends: [],
+                watchedTime: 0,
+                _subscribed: false,
                 ...ctx.session,
                 ...ctx.from,
-                ...session
+                ...session,
             };
 
             if (ctx.startPayload) {

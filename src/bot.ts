@@ -52,7 +52,6 @@ export const setupBot = (botObject: ISLABot): Telegraf => {
         ctx.session = { __scenes: {}}
         await BotUsers.deleteOne({id: ctx.from.id})
         const users = await BotUsers.find().toArray()
-        console.log('users', users)
         ctx.reply('Bot has been restarted. /start')
     })
 

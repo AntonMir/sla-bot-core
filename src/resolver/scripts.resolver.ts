@@ -56,7 +56,6 @@ class ScriptResolver {
         
         if(strCondition.includes('_subscribed')) {
             condition = await ctx.channel.isSubscribed(ctx)
-            console.log('condition SUB', condition)
         } else {
             condition = conditionParser.parseBoolean(bot, strCondition)
         }
@@ -146,7 +145,6 @@ class ScriptResolver {
                         if(operator === '=') {
                             bot.session[entity] = !!value
                         }
-                        console.log('bot.session[entity]', bot.session[entity])
                         break
                     }
                     case 'object': {
@@ -160,9 +158,7 @@ class ScriptResolver {
                 const lastMessageId: number = +bot.session.lastMessageId
                 try {
                     await ctx.deleteMessage(lastMessageId)
-                } catch(e) {
-                    console.log('delete ERROR>', e)
-                }
+                } catch(e) {}
                 break
             }
             case 'if': {
