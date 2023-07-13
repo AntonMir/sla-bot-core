@@ -1,10 +1,7 @@
 import { BotContext } from "@src/ts/botContext";
 import { ISLABaseScene, ISLABot, ISLAScript } from "@src/ts/ISLABot";
 import { sleep } from "@src/utils/sleep";
-import screenResolver from "./screen.resolver";
-import { Context } from "telegraf";
-import sceneResolver from "./scene.resolver";
-import popupResolver from "./popup.resolver";
+import { screenResolver, sceneResolver, popupResolver } from '@src/resolver'
 import { conditionParser, arithmeticParser } from "@src/utils/parser"
 
 
@@ -51,13 +48,13 @@ class ScriptResolver {
         // актуально для сцены с видео 
         if(script.includes('_watchedTime')) {
             const currentTime = Date.parse(String(new Date()))
-            bot.session._watchedTime = (currentTime - bot.session.startWatching) / 1000
+            ctx.session._watchedTime = (currentTime - ctx.session.startWatching) / 1000
         }
         
         if(strCondition.includes('_subscribed')) {
             condition = await ctx.channel.isSubscribed(ctx)
         } else {
-            condition = conditionParser.parseBoolean(bot, strCondition)
+            condition = conditionParser.parseBoolean(ctx, bot, strCondition)
         }
 
         if(condition) {
@@ -74,7 +71,6 @@ class ScriptResolver {
         scriptValue: string,
         usedItem?: string
     ) {
-
         const [command, ...args] = scriptValue.split(' ')
 
         switch (command) {
@@ -84,7 +80,7 @@ class ScriptResolver {
                 const scriptId: string = args[1]
                 const script: ISLAScript = this.getScript(scriptId)
                 if(script.text.includes('if')) {
-                    await ctx.resolver.resolveConditional(bot, ctx, scene, script.text, 'button')
+                    await ctx.resolver.resolveConditional(bot, ctx, scene, script.text, usedItem)
                     break
                 }
                 await this.resolveMany(bot, ctx, scene, script.text)
@@ -93,7 +89,7 @@ class ScriptResolver {
             case 'sleep': {
                 if(usedItem === 'button') break
                 const timer: number = +args[0]
-                await sleep(timer)
+                await sleep(timer * 1000)
                 break
             }
             case 'enter': {
@@ -131,38 +127,36 @@ class ScriptResolver {
                 const operator: string = args[1]
                 const value: string = args[2]
 
-
-
-                switch(typeof bot.session[entity]) {
+                switch(typeof ctx.session[entity]) {
                     case 'number': {
-                        const prew = bot.session[entity]
-                        bot.session[entity] = arithmeticParser.parseStr(
-                            `${bot.session[entity]} ${operator} ${value}`
+                        const prew = ctx.session[entity]
+                        ctx.session[entity] = arithmeticParser.parseStr(
+                            `${ctx.session[entity]} ${operator} ${value}`
                         )
                         break
                     }
                     case 'boolean': {
                         if(operator === '=') {
-                            bot.session[entity] = !!value
+                            ctx.session[entity] = !!value
                         }
                         break
                     }
                     case 'object': {
-                        bot.session[entity].push(value)
+                        ctx.session[entity].push(value)
                         break
                     }
                 }
                 break
             }
             case 'delete': {
-                const lastMessageId: number = +bot.session.lastMessageId
+                const lastMessageId: number = +ctx.session.lastMessageId
                 try {
                     await ctx.deleteMessage(lastMessageId)
                 } catch(e) {}
                 break
             }
             case 'if': {
-                await ctx.resolver.resolveConditional(bot, ctx, scene, scriptValue, 'button')
+                await ctx.resolver.resolveConditional(bot, ctx, scene, scriptValue, usedItem)
                 break
             }
         }

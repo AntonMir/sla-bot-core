@@ -1,12 +1,10 @@
 import { ExtraAnimation, ExtraReplyMessage, ExtraVideo } from 'telegraf/typings/telegram-types'
-import { ISLABot, ISLAButton, ScenesLike, ScreenLike } from '@src/ts/ISLABot'
-import { Markup } from 'telegraf'
+import { ISLABot, ScenesLike, ScreenLike } from '@src/ts/ISLABot'
 import { BotContext } from '@src/ts/botContext'
 import { logger } from '@src/utils/logger'
 import mediaParser from '@src/utils/mediaParser'
-import buttonResolver from './button.resolver'
+import { buttonResolver } from '@src/resolver'
 import { sleep } from '@src/utils/sleep'
-import { InlineKeyboardButton, InlineKeyboardMarkup } from 'telegraf/types'
 import { flow } from '@src/utils/flow'
 
 /**
@@ -53,7 +51,7 @@ const screenResolver = async (
             // редактируем старое сообщение
             message = await ctx.telegram.editMessageText(
                 ctx.from.id, 
-                bot.session.lastMessageId, 
+                ctx.session.lastMessageId, 
                 undefined,
                 ctx.loc(screen.text, ctx)
             )
@@ -71,12 +69,12 @@ const screenResolver = async (
         }
 
         // сохраним номер последнего сообщения чтобы удалить при необходимости
-        bot.session.lastMessageId = message.message_id
+        ctx.session.lastMessageId = message.message_id
     }
 
     if('video' in screen) {
         let extra: ExtraVideo = {}
-        const randomVideo = mediaParser.getFileName(bot, screen.video)
+        const randomVideo = mediaParser.getFileName(ctx, bot, screen.video)
         const videoPath = await ctx.fileId.getFileId(randomVideo)
 
         // если есть подпись под видео
@@ -105,16 +103,16 @@ const screenResolver = async (
         }
 
         // фиксируем начало просмотра видео
-        bot.session.startWatching = Date.parse(String(new Date()))
+        ctx.session.startWatching = Date.parse(String(new Date()))
 
         // сохраним номер последнего сообщения чтобы удалить при необходимости
-        bot.session.lastMessageId = message.message_id
+        ctx.session.lastMessageId = message.message_id
     }
 
     if('gif' in screen) {
         let extra: ExtraAnimation = {}
 
-        const gifName = mediaParser.getFileName(bot, screen.gif)
+        const gifName = mediaParser.getFileName(ctx, bot, screen.gif)
         const gifPath = await ctx.fileId.getFileId(gifName)
 
         // если есть подпись под gif
@@ -143,7 +141,7 @@ const screenResolver = async (
         }
 
         // сохраним номер последнего сообщения чтобы удалить при необходимости
-        bot.session.lastMessageId = message.message_id
+        ctx.session.lastMessageId = message.message_id
     }
 
     if('action' in screen) {
@@ -152,7 +150,7 @@ const screenResolver = async (
     }
 
     // сохраним последний отрисованный экран
-    bot.session.currentScreen = screenId
+    ctx.session.currentScreen = screenId
 }
 
 export default screenResolver

@@ -30,22 +30,22 @@ export const sampleScenes: ScenesLike[]  = [
             {
                 id: '0.1',
                 text: 'video_preparing_0_html',
-                action: 'sleep 1000\n' + 'editTo screen 0.1.1'
+                action: 'sleep 1\n' + 'editTo screen 0.1.1'
             },
             {
                 id: '0.1.1',
                 text: 'video_preparing_30_html',
-                action: 'sleep 1000\n' + 'editTo screen 0.1.2'
+                action: 'sleep 1\n' + 'editTo screen 0.1.2'
             },
             {
                 id: '0.1.2',
                 text: 'video_preparing_70_html',
-                action: 'sleep 1000\n' + 'editTo screen 0.2'
+                action: 'sleep 1\n' + 'editTo screen 0.2'
             },
             {
                 id: '0.2',
                 text: 'video_preparing_100_html',
-                action: 'sleep 1000\n' + 'delete\n' + 'enter screen 0.3'
+                action: 'sleep 1\n' + 'delete\n' + 'enter screen 0.3'
             },
             {
                 id: '0.3',
@@ -69,7 +69,7 @@ export const sampleScenes: ScenesLike[]  = [
             {
                 id: '1.0',
                 text: 'video_counter',
-                action: 'sleep 2000\n' + 'delete\n' + 'enter screen 1.0.1'
+                action: 'sleep 2\n' + 'delete\n' + 'enter screen 1.0.1'
             },
             {
                 id: '1.0.1',

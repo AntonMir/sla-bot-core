@@ -10,7 +10,7 @@ class MediaParser {
      * @param {string} listId - id списка медиа элементов в локализации 
      * @returns 
      */
-    getFileName(bot: ISLABot, listId: string): string {
+    getFileName(ctx: BotContext, bot: ISLABot, listId: string): string {
         try {
             const locale: ISLALocale = bot.locale.find((el) => el.id === listId)
             const content: string[] | string = locale.content || locale.contentArr
@@ -24,19 +24,19 @@ class MediaParser {
                 return content
             }
 
-            if(bot.session[`_watched-${listId}`] === undefined) {
-                bot.session[`_watched-${listId}`] = []
+            if(ctx.session[`_watched-${listId}`] === undefined) {
+                ctx.session[`_watched-${listId}`] = []
             }
 
             const filteredEl = content.filter(
-                (el: string) => !bot.session[`_watched-${listId}`].includes(el)
+                (el: string) => !ctx.session[`_watched-${listId}`].includes(el)
             );
 
             // Отдаем случайный элемент массива
             const randomEl = filteredEl[Math.floor(Math.random() * filteredEl.length)];
             
             // save watched element to session
-            bot.session[`_watched-${listId}`].push(randomEl);
+            ctx.session[`_watched-${listId}`].push(randomEl);
 
             return randomEl
            

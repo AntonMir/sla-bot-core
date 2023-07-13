@@ -3,11 +3,15 @@ import { localeStorage } from '@src/utils/loc'
 import { BotContext } from '@src/ts/botContext'
 import { ISLABot } from '@src/ts/ISLABot'
 import { botErrorCatcher } from '@src/utils/botErrorCatcher'
-import { screenResolver, ScriptResolver } from '@src/resolver'
-import actionResolver from '@src/resolver/action.resolver'
+import { 
+    screenResolver, 
+    ScriptResolver, 
+    pushResolver, 
+    hearResolver, 
+    actionResolver 
+} from '@src/resolver'
 import { logger } from '@src/utils/logger'
 import botStart from './bot.start'
-import hearResolver from './resolver/hear.resolver'
 import { session } from './utils/session';
 import * as rateLimit from 'telegraf-ratelimit';
 import { BotUsers } from '@src/db/models/botUser'
@@ -15,7 +19,6 @@ import { subFlow } from './utils/subFlow'
 import { ChannelObject } from './utils/channel'
 import FileIdService from './utils/fileId'
 import { DevFileIdService } from './utils/fileId.dev'
-import { pushResolver } from './resolver/push.resolver'
 
 
 export const setupBot = (botObject: ISLABot): Telegraf => {
@@ -59,7 +62,7 @@ export const setupBot = (botObject: ISLABot): Telegraf => {
     botInstance.on('chat_member', subFlow);
 
     // Session
-    botInstance.use(session(botObject))
+    botInstance.use(session(botInstance))
 
     // FileId service
     if(process.env.NODE_ENV === 'production') {
@@ -102,6 +105,8 @@ export const setupBot = (botObject: ISLABot): Telegraf => {
     stage.scenes = new Map<string, Scenes.BaseScene<BotContext>>(scenes)
 
     botInstance.use(stage.middleware())
+
+
     
     // bot.start(...)
     botStart(botInstance, botObject.initialScene, botObject.session)

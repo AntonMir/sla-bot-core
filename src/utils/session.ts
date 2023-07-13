@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { BotContext } from '@src/ts/botContext'
 import { ISLABot, ISLASession } from '@src/ts/ISLABot'
 import { BotUsers } from '@src/db/models/botUser'
+import { Telegraf } from 'telegraf';
 
 const getSessionKey = ({ from }, botObject: ISLABot) => {
     const bot = botObject.id;
@@ -15,7 +16,7 @@ const getSessionKey = ({ from }, botObject: ISLABot) => {
 /**
  * Session middleware with native meteor mongodb connection
  */
-export const session = (botObject: ISLABot) => {
+export const session = (bot: Telegraf<BotContext>) => {
 
     const collection = BotUsers;
 
@@ -33,12 +34,12 @@ export const session = (botObject: ISLABot) => {
     };
 
     return async (ctx: BotContext, next: any) => {
-        const key = getSessionKey(ctx, botObject);
+        const key = getSessionKey(ctx, bot.context.botObject);
         const data = key == null ? undefined : await getSession(key);
 
         ctx.session = {
             ...data,
-            ...botObject.session
+            ...bot.context.session
         }
         ctx.session.lastActivity = new Date()
 

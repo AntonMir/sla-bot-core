@@ -1,4 +1,5 @@
 import { ISLABot } from "@src/ts/ISLABot"
+import { BotContext } from "@src/ts/botContext"
 
 type MathFunction = (a: number, b: number) => boolean
 
@@ -25,9 +26,9 @@ class ConditionParser {
      * @param {string} expression `if 1 < 2`
      * @returns {boolean} true
      */
-    parseBoolean(bot: ISLABot, expression: string): boolean {
+    parseBoolean(ctx: BotContext, bot: ISLABot, expression: string): boolean {
         const script = expression.split(' ')
-        const firstVar: string = bot.session[script[1]]
+        const firstVar: string = ctx.session[script[1]]
         let secVar: boolean | number | string
 
         if(['true', 'false'].includes(script[3])) {
@@ -39,7 +40,7 @@ class ConditionParser {
         }
 
         if(isNaN(+script[3]) && !['true', 'false'].includes(script[3])) {
-            secVar = bot.session[script[3]]
+            secVar = ctx.session[script[3]]
         }
 
 

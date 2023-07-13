@@ -262,7 +262,7 @@ export const sampleLocale: ISLALocale[]  = [
             + `Статус: ✅ Верифицирован\n`
             + `Денег в копилке: {session.balance} €\n`
             + `Просмотров: {session.videoCounter}\n`
-            + `Друзей приглашено: {session._invitedFriends}\n`
+            + `Друзей приглашено: {session._invitedUsers}\n`
             + `\n`
             + `А вот, чего добились мы.\n`
             + `Статистика за {extra.currentDate}:\n`

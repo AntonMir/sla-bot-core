@@ -2,7 +2,6 @@ import { ISLASession, SceneID } from '@src/ts/ISLABot'
 import { Telegraf } from 'telegraf'
 import { BotContext } from '@src/ts/botContext'
 import { leadBot } from './utils/lead'
-import { BotUser } from './db/models/botUser'
 
 /**
  * Запуск бота: /start
@@ -12,9 +11,10 @@ const botStart = (bot: Telegraf<BotContext>, initialScene: SceneID, session: ISL
 
         if(!ctx.session.agreement) {
             ctx.session = {
-                _invitedFriends: [],
-                watchedTime: 0,
+                _invitedUsers: [],
                 _subscribed: false,
+                _watchedTime: Date.parse(String(new Date())),
+                _rewardForInvitedUsers: 15,
                 ...ctx.session,
                 ...ctx.from,
                 ...session,
@@ -39,6 +39,8 @@ const botStart = (bot: Telegraf<BotContext>, initialScene: SceneID, session: ISL
                     }
                 }
             }
+
+            ctx.session.agreement === true
         }
 
        

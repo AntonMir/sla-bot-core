@@ -31,23 +31,24 @@ const localeFormatter = (
                 break
             }
             case 'session': {
-                const typeValue = typeof bot.session[variable]
+                const typeValue = typeof  ctx.session[variable]
+
                 if(typeValue === 'string' || typeValue === 'number' ) {
                     if(mathOperationSymbol) {
                         value = mathValue_before 
                             ? String(arithmeticParser.parseStr(
-                                `${mathValue_before} ${mathOperationSymbol} ${bot.session[variable]}`
+                                `${mathValue_before} ${mathOperationSymbol} ${ ctx.session[variable]}`
                             ))
                             : String(arithmeticParser.parseStr(
-                                `${bot.session[variable]} ${mathOperationSymbol} ${mathValue_after}`
+                                `${ ctx.session[variable]} ${mathOperationSymbol} ${mathValue_after}`
                             ))
                         break
                     }
-                    value = bot.session[variable]
+                    value =  ctx.session[variable]
                     break
                 } 
                 if(typeValue === 'object') {
-                    value = bot.session[variable].length
+                    value =  ctx.session[variable].length
                     break
                 }
                 if(variable === '_referralLink') {

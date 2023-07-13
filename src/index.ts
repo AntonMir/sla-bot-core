@@ -1,19 +1,29 @@
-// Starter script
+// ----------------- не трогать ------------------
 import * as dotenv from 'dotenv'
 dotenv.config()
 import 'module-alias/register'
 import { setupBot } from './bot'
 import { mongoConnetion } from './db/db.connect'
-
-import { sampleBot } from '@src/bots/sample'
-import { cheeleBot } from '@src/bots/cheele'
+// -----------------------------------------------
 
 
+// необходимо импортировать сюда своего бота
+// Пример:
+// import { имяТвоегоБота } '@src/bots/имяПапкиТвоегоБота'
+import { exampleBot } from '@src/bots/example'
+
+
+// ----------------- не трогать ------------------
 mongoConnetion()
+// -----------------------------------------------
 
-// setupBot(sampleBot).launch({
+
+// Необходимо пропустить нового бота через парсер 
+// Заменячем exampleBot на имяТвоегоБота
+// Пример:
+// setupBot(имяТвоегоБота).launch({
 //     allowedUpdates: ['message', 'callback_query', 'chat_member'],
 // })
-setupBot(cheeleBot).launch({
+setupBot(exampleBot).launch({
     allowedUpdates: ['message', 'callback_query', 'chat_member'],
 })

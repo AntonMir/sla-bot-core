@@ -34,9 +34,9 @@ export const leadBot = async (
                     bot: ctx.botObject.id,
                 },
                 {
-                    $push: { 'data.invitedUsers': ctx.from.id },
+                    $push: { 'data._invitedUsers': ctx.from.id },
                     $inc: {
-                        'data.balance': parseInt(ctx.loc('rewardReferral', ctx)),
+                        'data.balance': +ctx.session._rewardForInvitedUsers,
                     },
                 }
             );

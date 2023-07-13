@@ -1,28 +1,30 @@
 import { ISLABot } from '@src/ts/ISLABot'
 
-export const cheeleBot: ISLABot = {
+export const exampleBot: ISLABot = {
     id: 'cheele-test-bot', // имя бота (при создании)
     token: '6373528436:AAGmZYa3q7OGUjFvXPwX2QdD8eMuDKBBedg', // токен бота
-    username: 'cheeleTestBot_bot', // уникальный идентификатор бота (при создании)
     channel: `BLYr6965stNY56NNP`, // сохраненный через slaver канал (оставляем текущий)
-
+    username: 'cheeleTestBot_bot', // уникальный идентификатор бота (при создании)
+    
     initialScene: 'agreement', // начальная сцена
     flowTracking: true, // ВКЛ/ВЫКЛ логировани (оставляем не тронутым)
-
+    
     // сессия - список переменных(с начальными значениями) для запоминания каких-то параметров
     // к примеру запоминаем баланс пользователя для дальнейшего изменения через скрипты
     session: {
-        balance: 500,
+        balance: 0,
         videoReward: 10,
         videoLimit: 10,
         videoCounter: 0,
         agreement: false,
         paymentDetails: '',
-        paymentSum: 0
+        paymentSum: 0,
+        _rewardForInvitedUsers: 120
         // _watchedTime - переменная вшита в экран видео и отслеживает время с начала просмотра видео
         // _subscribed - переменная вшита в бота и изменяется в зависимости от состояния подписки юзера на канал
-        // _invitedFriends - список приглашенных друзей (через скрипты можно получить длинну этого списка "{session._invitedFriends}")
-    
+        // _invitedUsers - список приглашенных друзей (через скрипты можно получить длинну этого списка. Получить доступ: {session._invitedUsers})
+        // _rewardForInvitedUsers - награда за приглашенного друга (дефолтное значение стоит на 15, но можно переопределить)
+        // _referralLink - сгенерированная реферальная ссылка. Получить доступ: {session._referralLink}
     },
 
     // скрипты с какими-лио действиями (удаление/переход на дртугую сцену/ожидание/изменение сессии/...)
@@ -58,7 +60,7 @@ export const cheeleBot: ISLABot = {
         },
         {
             id: 'after-first-video-reward',
-            text: 'sleep 2000\n'
+            text: 'sleep 2\n'
                 + `session balance + 10\n`
                 + 'delete\n' 
                 + 'enter screen 1.0'
@@ -77,17 +79,17 @@ export const cheeleBot: ISLABot = {
         },
         {
             id: 'enter-screen-1.2',
-            text: 'sleep 2000\n' 
+            text: 'sleep 2\n' 
                 + `enter screen 1.2`
         },
         {
             id: 'enter-screen-1.3',
-            text: 'sleep 2000\n' 
+            text: 'sleep 2\n' 
                 + `enter screen 1.3`
         },
         {
             id: 'enter-screen-video-no-delete',
-            text: 'sleep 2000\n' 
+            text: 'sleep 2\n' 
                 + `enter screen 1.0`
         },
         {
@@ -159,22 +161,22 @@ export const cheeleBot: ISLABot = {
                 {
                     id: '0.1',
                     text: 'video_preparing_0_html',
-                    action: 'sleep 1000\n' + 'editTo screen 0.1.1'
+                    action: 'sleep 1\n' + 'editTo screen 0.1.1'
                 },
                 {
                     id: '0.1.1',
                     text: 'video_preparing_30_html',
-                    action: 'sleep 1000\n' + 'editTo screen 0.1.2'
+                    action: 'sleep 1\n' + 'editTo screen 0.1.2'
                 },
                 {
                     id: '0.1.2',
                     text: 'video_preparing_70_html',
-                    action: 'sleep 1000\n' + 'editTo screen 0.2'
+                    action: 'sleep 1\n' + 'editTo screen 0.2'
                 },
                 {
                     id: '0.2',
                     text: 'video_preparing_100_html',
-                    action: 'sleep 1000\n' + 'delete\n' + 'enter screen 0.3'
+                    action: 'sleep 1\n' + 'delete\n' + 'enter screen 0.3'
                 },
                 {
                     id: '0.3',
@@ -198,7 +200,7 @@ export const cheeleBot: ISLABot = {
                 {
                     id: '1.0',
                     text: 'video_counter',
-                    action: 'sleep 2000\n' + 'delete\n' + 'enter screen 1.0.1'
+                    action: 'sleep 2\n' + 'delete\n' + 'enter screen 1.0.1'
                 },
                 {
                     id: '1.0.1',
@@ -417,13 +419,13 @@ export const cheeleBot: ISLABot = {
                         [
                             {
                                 text: 'to_videos_btn',
-                                action: 'delete\n' + 'enter scene rules',
+                                action: 'delete\n' + 'enter scene video',
                             },
                         ],
                         [
                             {
                                 text: 'back_btn',
-                                action: 'delete\n' + 'enter scene mainMenu',
+                                action: 'delete\n' + 'enter scene mainMenu\n',
                             },
                         ],
                     ]
@@ -468,7 +470,7 @@ export const cheeleBot: ISLABot = {
                         [
                             {
                                 text: 'reject_of_knowledge_btn',
-                                action: 'delete\n' + 'enter scene videos',
+                                action: 'delete\n' + 'enter scene video',
                             },
                         ],
                     ],
@@ -808,7 +810,7 @@ export const cheeleBot: ISLABot = {
                 + `➡️ Ваша пригласительная ссылка: {session._referralLink}\n` 
                 + `\n` 
                 + `✔️ 10€ за каждого приглашенного Вами пользователя.`
-                + `➕ Приглашено человек: 0`,
+                + `➕ Приглашено человек: {session._invitedUsers}`,
             formatted: true,
         },
         {
@@ -853,7 +855,7 @@ export const cheeleBot: ISLABot = {
                 + `Статус: ✅ Верифицирован\n`
                 + `Денег в копилке: {session.balance} €\n`
                 + `Просмотров: {session.videoCounter}\n`
-                + `Друзей приглашено: {session._invitedFriends}\n`
+                + `Друзей приглашено: {session._invitedUsers}\n`
                 + `\n`
                 + `А вот, чего добились мы.\n`
                 + `Статистика за {extra.currentDate}:\n`
@@ -892,7 +894,7 @@ export const cheeleBot: ISLABot = {
             id: 'income_partner_reward_html',
             content: 
                 `✅ Вам был начислен бонус 100€\n`
-                + `• Баланс: {session.balance}€ → {session.balance + 100}€\n`
+                + `• Баланс: {session.balance - 100}€ → {session.balance}€\n`
                 + `\n`
                 + `💰10 000€+ на канале, на который вы только что подписались, можно забрать сейчас\n`
                 + `• Время изучения информации ~ 3 минуты\n`
@@ -1003,6 +1005,10 @@ export const cheeleBot: ISLABot = {
             id: 'rewardReferral',
             content: '10'
         },
+        {
+            id: 'video_text_html',
+            content: 'video_text_html srth ШАБЛОН'
+        }
     ],
 
     // пуши с таймингом
@@ -1011,7 +1017,7 @@ export const cheeleBot: ISLABot = {
         {
             id: '5.0',
             text: 'push_html',
-            timer: 1,
+            timer: 0.1,
             buttons: [
                 [
                     {

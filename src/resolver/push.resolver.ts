@@ -6,40 +6,45 @@ import { WithId } from "mongodb";
 import { AnyObject } from "mongoose";
 import * as schedule from "node-schedule";
 import { Telegraf } from "telegraf";
-import buttonResolver from "./button.resolver";
+import { buttonResolver } from "@src/resolver";
 
 /**
  * Парсинг пушей
  */
-export const pushResolver = (
+const pushResolver = (
     bot: Telegraf<BotContext>
 ) => {
     return bot.context.botObject.pushes.map(push => {
         
-        schedule.scheduleJob(pushTimer(bot, 5),
+        schedule.scheduleJob(pushTimer(bot, 1),
             async () => {
-                const users = await findUsers(bot,
-                    {'data.lastActivity': { 
-                        $lte: moment().add(-push.timer, 'minute').toDate() 
-                    }}
-                )
-                for (let user in users) {
-                    const lastPushId: number = +users[user].data.lastPushId
-                    const chatId : number = +users[user].id
-                    await deleteLastMessage(bot, chatId, lastPushId)
-
-
-                    const extra = {
-                        reply_markup: buttonResolver(bot.context, push)
-                    }
-               
-                    const message = await bot.telegram.sendMessage(
-                        users[user].id,
-                        bot.context.loc(push.text, bot.context),
-                        extra
+                try {
+                    const users = await findUsers(bot,
+                        {'data.lastActivity': { 
+                            $lte: moment().add(-push.timer, 'minute').toDate() 
+                        }}
                     )
-                    await updateUser(bot, users[user], message.message_id)
+                    for (let user in users) {
+                        const lastPushId: number = +users[user].data.lastPushId
+                        const chatId : number = +users[user].id
+                        await deleteLastMessage(bot, chatId, lastPushId)
+
+
+                        const extra = {
+                            reply_markup: buttonResolver(bot.context, push)
+                        }
+                
+                        const message = await bot.telegram.sendMessage(
+                            users[user].id,
+                            bot.context.loc(push.text, bot.context),
+                            extra
+                        )
+                        await updateUser(bot, users[user], message.message_id)
+                    }
+                } catch(error) {
+                    console.error('errorerror', error)
                 }
+
             }
         );
     })
@@ -49,7 +54,7 @@ export const pushResolver = (
 /**
  * Удаление предыдущих сообщений чата
  */
-export async function deleteLastMessage(
+async function deleteLastMessage(
     bot: Telegraf<BotContext>, 
     chat_id: number, 
     lastMessageId: number
@@ -62,7 +67,7 @@ export async function deleteLastMessage(
 /**
  * Фиксация времени и номера отправленного пуша в базе
  */
-export async function updateUser(bot: Telegraf<BotContext>, user: WithId<AnyObject>, lastPushId: number | string) {
+async function updateUser(bot: Telegraf<BotContext>, user: WithId<AnyObject>, lastPushId: number | string) {
     await BotUsers.updateOne(
         {
             id: user.id,
@@ -81,7 +86,7 @@ export async function updateUser(bot: Telegraf<BotContext>, user: WithId<AnyObje
  * - пользовались ботом час назад
  * - и доп. параметры объектом
  */
-export async function findUsers(bot: Telegraf<BotContext>, queryParams?: object): Promise<WithId<AnyObject>[]> {
+async function findUsers(bot: Telegraf<BotContext>, queryParams?: object): Promise<WithId<AnyObject>[]> {
     // TODO: Реавлизовать поиск по боту, а не тупо всех пользователей
     return await BotUsers.find({
         // 'data.bot': bot.context.botObject.id,
@@ -94,7 +99,7 @@ export async function findUsers(bot: Telegraf<BotContext>, queryParams?: object)
  * Унифицированный таймер для пушей
  * - если время не указано, пуши идут раз в 1 мин.
  */
-export function pushTimer(bot: Telegraf<BotContext>, num?: number | string): string {
+function pushTimer(bot: Telegraf<BotContext>, num?: number | string): string {
     try {
         if(typeof num === 'number') {
             return `*/${String(num)} * * * *`
@@ -107,3 +112,6 @@ export function pushTimer(bot: Telegraf<BotContext>, num?: number | string): str
         console.error('Push Timer Error >>>', error)
     }
 }
+
+
+export default pushResolver

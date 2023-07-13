@@ -32,7 +32,7 @@ export const sampleScripts: ISLAScript[]  = [
     },
     {
         id: 'after-first-video-reward',
-        text: 'sleep 2000\n'
+        text: 'sleep 2\n'
             + `session balance + 10\n`
             + 'delete\n' 
             + 'enter screen 1.0'
@@ -51,17 +51,17 @@ export const sampleScripts: ISLAScript[]  = [
     },
     {
         id: 'enter-screen-1.2',
-        text: 'sleep 2000\n' 
+        text: 'sleep 2\n' 
             + `enter screen 1.2`
     },
     {
         id: 'enter-screen-1.3',
-        text: 'sleep 2000\n' 
+        text: 'sleep 2\n' 
             + `enter screen 1.3`
     },
     {
         id: 'enter-screen-video-no-delete',
-        text: 'sleep 2000\n' 
+        text: 'sleep 2\n' 
             + `enter screen 1.0`
     },
     {

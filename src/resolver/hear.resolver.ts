@@ -8,26 +8,30 @@ const hearResolver = (
     sceneInstance: Scenes.BaseScene<BotContext>, 
     scene: ISLABaseScene
 ) => {
-    return sceneInstance.hears(/(.*)/g, async (ctx) => {
-        const userInput = ctx.match.input
+    try {
+        return sceneInstance.hears(/(.*)/g, async (ctx) => {
+            const userInput = ctx.match.input
 
-        const filteredScenes = scene.screens.filter(screen => {
-            return screen.hears && screen.id === bot.session.currentScreen
+            const filteredScenes = scene.screens.filter(screen => {
+                return screen.hears && screen.id === ctx.session.currentScreen
+            })
+
+            if(filteredScenes.length === 0) {
+                return
+            }
+
+            const currentScreen = filteredScenes[0]
+            ctx.session[`${currentScreen.hears}`] = userInput
+
+            // парсинг действий action после успешной прослушки
+            if(currentScreen.actionAfterHear.includes('if')) {
+                return await ctx.resolver.resolveOne(bot, ctx, scene, currentScreen.actionAfterHear, 'button')
+            }
+            return await ctx.resolver.resolveMany(bot, ctx, scene, currentScreen.actionAfterHear, 'button')
         })
-
-        if(filteredScenes.length === 0) {
-            return
-        }
-
-        const currentScreen = filteredScenes[0]
-        bot.session[`${currentScreen.hears}`] = userInput
-
-        // парсинг действий action после успешной прослушки
-        if(currentScreen.actionAfterHear.includes('if')) {
-            return await ctx.resolver.resolveOne(bot, ctx, scene, currentScreen.actionAfterHear, 'button')
-        }
-        return await ctx.resolver.resolveMany(bot, ctx, scene, currentScreen.actionAfterHear, 'button')
-    })
+    } catch(error) {
+        console.error('hearResolver ERROR>>>', error)
+    }
 }
 
 export default hearResolver
