@@ -21,6 +21,8 @@ const screenResolver = async (
     screenId: string,
     action: string = 'enter' // enter | editTo
 ) => {
+    // сохраним последний отрисованный экран
+    ctx.session.currentScreen = screenId
 
     try {
         await ctx.telegram.deleteMessage(ctx.from.id , ctx.session.lastPushId)
@@ -148,9 +150,6 @@ const screenResolver = async (
         // если в строке установлены несколько скриптов, парсим каждый
         await ctx.resolver.resolveMany(bot, ctx, scene, screen.action, 'screen')
     }
-
-    // сохраним последний отрисованный экран
-    ctx.session.currentScreen = screenId
 }
 
 export default screenResolver

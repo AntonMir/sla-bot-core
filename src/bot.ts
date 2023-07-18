@@ -3,59 +3,31 @@ import { localeStorage } from '@src/utils/loc'
 import { BotContext } from '@src/ts/botContext'
 import { ISLABot } from '@src/ts/ISLABot'
 import { botErrorCatcher } from '@src/utils/botErrorCatcher'
-import { 
-    screenResolver, 
-    ScriptResolver, 
-    pushResolver, 
-    hearResolver, 
-    actionResolver 
-} from '@src/resolver'
-import { logger } from '@src/utils/logger'
+import { ScriptResolver, pushResolver } from '@src/resolver'
 import botStart from './bot.start'
 import { session } from './utils/session';
-import * as rateLimit from 'telegraf-ratelimit';
 import { BotUsers } from '@src/db/models/botUser'
 import { subFlow } from './utils/subFlow'
 import { ChannelObject } from './utils/channel'
 import FileIdService from './utils/fileId'
 import { DevFileIdService } from './utils/fileId.dev'
+import sceneCollector from './collector/scene.collector'
+import chatsAndChannelsBlocker from './utils/chats&channelsBlocker'
+import rateLimit from './utils/rateLimit'
 
 
 export const setupBot = (botObject: ISLABot): Telegraf => {
 
-    const { token } = botObject
+    const botInstance = new Telegraf<BotContext>(botObject.token)
 
-    const botInstance = new Telegraf<BotContext>(token)
+    chatsAndChannelsBlocker(botInstance)
+    rateLimit(botInstance)
 
-    // ignore chats and channels
-    botInstance.use((ctx, next) => {
-        if (!ctx.from) {
-            return;
-        } else {
-            next();
-        }
-    });
-
-    botInstance.context.botObject = botObject;
-    
-    // Rate limit
-    botInstance.use(
-        // @ts-ignore commonjs module
-        rateLimit({
-            window: 3000,
-            limit: 2,
-            onLimitExceeded: () => {
-                /* Just ignore him */
-                return null;
-            },
-        })
-    );
-
-    botInstance.command('slaReset', async ctx => {
+    botInstance.command('slaReset', async (ctx, next) => {
         ctx.session = { __scenes: {}}
-        await BotUsers.deleteOne({id: ctx.from.id})
-        const users = await BotUsers.find().toArray()
+        await BotUsers.deleteMany({id: ctx.from.id, bot: botObject.id})
         ctx.reply('Bot has been restarted. /start')
+        await next()
     })
 
     // Subscribe tracker
@@ -64,57 +36,36 @@ export const setupBot = (botObject: ISLABot): Telegraf => {
     // Session
     botInstance.use(session(botInstance))
 
-    // FileId service
-    if(process.env.NODE_ENV === 'production') {
-        botInstance.context.fileId = new FileIdService(botObject);
-    } else {
-        botInstance.context.fileId = new DevFileIdService(botObject);
-    }
-
+    // Добавление информацию и парсеры в контекст
+    botInstance.context.botObject = botObject;
     botInstance.context.loc = localeStorage(botObject)
-
     botInstance.context.resolver = new ScriptResolver(botObject)
-
-    // Channel object
     botInstance.context.channel = new ChannelObject(botObject.channel);
+    botInstance.context.fileId = 
+        process.env.NODE_ENV === 'production'
+            ? new FileIdService(botObject) 
+            : new DevFileIdService(botObject)
 
-    const scenes = []
+    // Инициируем пустой список сцен
+    // Заполняем сценами и пушами из бота
+    const scenes = [
+        ...sceneCollector(botObject, botObject.scenes),
+        ...sceneCollector(botObject, botObject.pushes)
+    ]
 
-    for (const scene of botObject.scenes) {
-        // ининциируем Рабочую сцену
-        const sceneInstance = new Scenes.BaseScene<BotContext>(scene.id)
-        
-        // инициируем рабочий триггер на вход для каждой сцены сцену
-        // enterSceneHandler(bot, scene, sceneInstance)
-        sceneInstance.enter(async (ctx) => {
-            logger.info(`[${ctx.from.id}] enter scene ${scene.id}`)
-            await screenResolver(botObject, ctx, scene, scene.screens, scene.initialScreen)
-        })
-
-        // парсинг button action для каждой сцены
-        actionResolver(botObject, sceneInstance, scene)
-
-        // прослушка вводимых данных пользователем 
-        // + реагирование на определенных сценах
-        hearResolver(botObject, sceneInstance, scene)
-
-        scenes.push([scene.id, sceneInstance])
-    }
-    
+    // stage содержащий рабочие сцены для бота (встроенный функционал телеги)
     const stage = new Scenes.Stage<BotContext>()
     stage.scenes = new Map<string, Scenes.BaseScene<BotContext>>(scenes)
-
+    // прокидываем распаршенные сцена в нашего бота
     botInstance.use(stage.middleware())
 
+    pushResolver(botInstance)
 
-    
     // bot.start(...)
     botStart(botInstance, botObject.initialScene, botObject.session)
 
     // Отлов ошибок
     botErrorCatcher(botInstance)
-
-    pushResolver(botInstance)
 
     return botInstance
 }

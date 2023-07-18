@@ -1,5 +1,5 @@
 import { BotUsers } from "@src/db/models/botUser";
-import { ISLABot } from "@src/ts/ISLABot"
+import { ISLABasePush, ISLABot, PopupLike, PushLike } from "@src/ts/ISLABot"
 import { BotContext } from "@src/ts/botContext";
 import moment = require("moment");
 import { WithId } from "mongodb";
@@ -15,38 +15,65 @@ const pushResolver = (
     bot: Telegraf<BotContext>
 ) => {
     return bot.context.botObject.pushes.map(push => {
-        
-        schedule.scheduleJob(pushTimer(bot, 1),
+
+        schedule.scheduleJob(
+            `*/21 * * * * *`,
             async () => {
                 try {
-                    const users = await findUsers(bot,
-                        {'data.lastActivity': { 
-                            $lte: moment().add(-push.timer, 'minute').toDate() 
-                        }}
-                    )
+                    // Get users List
+                    const users = await findUsers(bot, push, {})
+
                     for (let user in users) {
+                        // delete lastPush
                         const lastPushId: number = +users[user].data.lastPushId
                         const chatId : number = +users[user].id
                         await deleteLastMessage(bot, chatId, lastPushId)
 
-
+                        // Get default push screen
+                        const initPushScreen = push.screens.filter(screen => {
+                            return screen.id === push.initialScreen
+                        })[0]
+                        
+                        // Buttons parse
                         const extra = {
-                            reply_markup: buttonResolver(bot.context, push)
+                            reply_markup: buttonResolver(bot.context, initPushScreen)
                         }
-                
+
+                        // MESSAGE (PUSH) TO USER
                         const message = await bot.telegram.sendMessage(
                             users[user].id,
-                            bot.context.loc(push.text, bot.context),
+                            bot.context.loc(initPushScreen.text, bot.context),
                             extra
                         )
-                        await updateUser(bot, users[user], message.message_id)
+
+                        let updateUserParams: object = { 
+                            $set: { 
+                                'data.lastActivity': new Date(),
+                                'data.lastPushId': +message.message_id,
+                                'data.__scenes.current': push.id,
+                            }
+                        }
+
+                        if(!push.looping) {
+                            updateUserParams['$push'] = {
+                                'data.pushStopList': push.id
+                            }
+                        } else {
+                            try {
+                                updateUserParams['$pull'] = {
+                                    'data.pushStopList': push.id
+                                }
+                            } catch(error) {}
+                        }
+
+                        await updateUser(bot, push, users[user], message.message_id)
                     }
                 } catch(error) {
-                    console.error('errorerror', error)
+                    console.error(`PUSH [${push.id}] ERROR>>>`, error)
                 }
-
             }
         );
+
     })
 }
 
@@ -67,16 +94,37 @@ async function deleteLastMessage(
 /**
  * Фиксация времени и номера отправленного пуша в базе
  */
-async function updateUser(bot: Telegraf<BotContext>, user: WithId<AnyObject>, lastPushId: number | string) {
+async function updateUser(
+    bot: Telegraf<BotContext>, 
+    push: ISLABasePush,
+    user: WithId<AnyObject>, 
+    messageId: number
+) {
+    let updateUserParams: object = { 
+        $set: { 
+            'data.lastActivity': new Date(),
+            'data.lastPushId': +messageId,
+            'data.__scenes.current': push.id,
+        }
+    }
+
+    if(!push.looping) {
+        updateUserParams['$push'] = {
+            'data.pushStopList': push.id
+        }
+    } else {
+        try {
+            updateUserParams['$pull'] = {
+                'data.pushStopList': push.id
+            }
+        } catch(error) {}
+    }
     await BotUsers.updateOne(
         {
             id: user.id,
-            // bot: bot.context.botObject.id
-        },
-        { $set: { 
-            'data.lastActivity': new Date(),
-            'data.lastPushId': +lastPushId,
-        }}
+            bot: bot.context.botObject.id
+        }, 
+        updateUserParams
     )
 }
 
@@ -86,12 +134,37 @@ async function updateUser(bot: Telegraf<BotContext>, user: WithId<AnyObject>, la
  * - пользовались ботом час назад
  * - и доп. параметры объектом
  */
-async function findUsers(bot: Telegraf<BotContext>, queryParams?: object): Promise<WithId<AnyObject>[]> {
-    // TODO: Реавлизовать поиск по боту, а не тупо всех пользователей
+async function findUsers(
+    bot: Telegraf<BotContext>, 
+    push: ISLABasePush, 
+    customQueryParams?: object
+): Promise<WithId<AnyObject>[]> {
+    // DB query params
+    let defaultQueryParams: object = {
+        'data.lastActivity': { 
+            $lte: moment().add(-push.timer, 'minute').toDate() 
+        }
+    }
+
+    // Filtration
+    if(push?.filter && push.filter.length > 0) {
+        defaultQueryParams['data.__scenes.current'] = { 
+            $in: push.filter 
+        }
+    }
+
+    // если циклическое появление выключено
+    // в параметры поиска добавляем проверку по стоп листу пушей
+    // пользователя
+    if(push.looping === false) {
+        defaultQueryParams['data.pushStopList'] = { $ne: push.id }
+    }
+
     return await BotUsers.find({
-        // 'data.bot': bot.context.botObject.id,
-        // 'data.lastActivity': { $lte: moment().add(-1, 'hour').toDate() },
-        ...queryParams
+        bot: bot.context.botObject.id,
+        buyerRefer: { $exists: true },
+        ...defaultQueryParams,
+        ...customQueryParams
     }).toArray()
 }
 

@@ -6,7 +6,8 @@ export const exampleBot: ISLABot = {
     channel: `BLYr6965stNY56NNP`, // сохраненный через slaver канал (оставляем текущий)
     username: 'cheeleTestBot_bot', // уникальный идентификатор бота (при создании)
     
-    initialScene: 'agreement', // начальная сцена
+    initialScene: 'partnerReward', // начальная сцена
+    // initialScene: 'agreement', // начальная сцена
     flowTracking: true, // ВКЛ/ВЫКЛ логировани (оставляем не тронутым)
     
     // сессия - список переменных(с начальными значениями) для запоминания каких-то параметров
@@ -1014,24 +1015,24 @@ export const exampleBot: ISLABot = {
     // пуши с таймингом
     // пуши очень похожи на экраны (screens), только с таймером появления
     pushes: [
-        {
-            id: '5.0',
-            text: 'push_html',
-            timer: 0.1,
-            buttons: [
-                [
-                    {
-                        text: 'push_sub_btn',
-                        action: 'channel'
-                    }
-                ],
-                [
-                    {
-                        text: 'back_btn',
-                        action: 'delete\n' + 'enter scene mainMenu',
-                    },
-                ],
-            ]
-        }
+        // {
+        //     id: '5.0',
+        //     text: 'push_html',
+        //     timer: 30,
+        //     buttons: [
+        //         [
+        //             {
+        //                 text: 'push_sub_btn',
+        //                 action: 'channel'
+        //             }
+        //         ],
+        //         [
+        //             {
+        //                 text: 'back_btn',
+        //                 action: 'delete\n' + 'enter scene mainMenu',
+        //             },
+        //         ],
+        //     ]
+        // }
     ],
 }

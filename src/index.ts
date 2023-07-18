@@ -10,7 +10,8 @@ import { mongoConnetion } from './db/db.connect'
 // необходимо импортировать сюда своего бота
 // Пример:
 // import { имяТвоегоБота } '@src/bots/имяПапкиТвоегоБота'
-import { exampleBot } from '@src/bots/example'
+// import { exampleBot } from '@src/bots/example'
+import { testCheeleBot } from '@src/bots/testCheele'
 
 
 // ----------------- не трогать ------------------
@@ -24,6 +25,6 @@ mongoConnetion()
 // setupBot(имяТвоегоБота).launch({
 //     allowedUpdates: ['message', 'callback_query', 'chat_member'],
 // })
-setupBot(exampleBot).launch({
+setupBot(testCheeleBot).launch({
     allowedUpdates: ['message', 'callback_query', 'chat_member'],
 })

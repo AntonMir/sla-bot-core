@@ -7,7 +7,7 @@ export interface ISLABot {
     locale: ISLALocale[]
     scripts: ISLAScript[]
     session: ISLASession
-    pushes: PushesLike[]
+    pushes: PushLike[]
     flowTracking: any
     channel: string
 }
@@ -19,16 +19,17 @@ export interface ISLAScript {
 
 export type ScenesLike = ISLABaseScene
 
-export type ScreenLike = ISLATextScreen 
-                        | ISLAImageScreen 
-                        | ISLAVideoScreen 
-                        | ISLAGifScreen
+export type PushLike = ISLABasePush
 
-export type PopupLike = ISLATextScreen 
-                        | ISLAImageScreen 
-                        | ISLAVideoScreen 
-                        | ISLAGifScreen
+// export type ScreenLike = ISLAImageScreen 
+//                         | ISLAVideoScreen 
+//                         | ISLAGifScreen
+//                         | ISLATextScreen
+//                         | ISLAHearScreen
 
+export type ScreenLike = ISLAScreenBase
+
+export type PopupLike = ScreenLike
 
 export type BotID = string
 
@@ -36,15 +37,12 @@ export type SceneID = string
 
 export type ScreenID = string
 
+export type PushID = string
+
 export type LocaleID = string
 
 export interface ISLASession {
     [key: string]: any
-}
-
-export interface PushesLike extends ISLAScreenBase {
-    text: LocaleID
-    timer: number,
 }
 
 export interface ISLABaseScene {
@@ -52,6 +50,12 @@ export interface ISLABaseScene {
     initialScreen: ScreenID
     screens: ScreenLike[]
     popups?: PopupLike[]
+}
+
+export interface ISLABasePush extends ISLABaseScene {
+    timer: number
+    filter?: string[]
+    looping?: boolean
 }
 
 export interface ISLAButton {
@@ -64,28 +68,38 @@ export interface ISLAScreenBase {
     buttons?: ISLAButton[][]
     action?: string
     buttonDelay?: number
+    text?: LocaleID
     hears?: string
     actionAfterHear?: LocaleID
-}
-
-export interface ISLATextScreen extends ISLAScreenBase {
-    text: LocaleID
-}
-
-export interface ISLAImageScreen extends ISLAScreenBase {
-    image: LocaleID
+    image?: LocaleID
+    video?: LocaleID
+    gif?: LocaleID
     caption?: LocaleID
 }
 
-export interface ISLAVideoScreen extends ISLAScreenBase {
-    video: LocaleID
-    caption?: LocaleID
-}
+// export interface ISLATextScreen extends ISLAScreenBase {
+//     text: LocaleID
+// }
 
-export interface ISLAGifScreen extends ISLAScreenBase {
-    gif: LocaleID
-    caption?: LocaleID
-}
+// export interface ISLAHearScreen extends ISLAScreenBase {
+//     hears?: string
+//     actionAfterHear?: LocaleID
+// }
+
+// export interface ISLAImageScreen extends ISLAScreenBase {
+//     image: LocaleID
+//     caption?: LocaleID
+// }
+
+// export interface ISLAVideoScreen extends ISLAScreenBase {
+//     video: LocaleID
+//     caption?: LocaleID
+// }
+
+// export interface ISLAGifScreen extends ISLAScreenBase {
+//     gif: LocaleID
+//     caption?: LocaleID
+// }
 
 export interface ISLALocale {
     id: LocaleID

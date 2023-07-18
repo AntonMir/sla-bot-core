@@ -43,7 +43,6 @@ const botStart = (bot: Telegraf<BotContext>, initialScene: SceneID, session: ISL
             ctx.session.agreement === true
         }
 
-       
         await ctx.scene.enter(initialScene)
     })
 }
