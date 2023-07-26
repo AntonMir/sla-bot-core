@@ -1,20 +1,26 @@
-import { ISLASession, SceneID } from '@src/ts/ISLABot'
-import { Telegraf } from 'telegraf'
-import { BotContext } from '@src/ts/botContext'
-import { leadBot } from './utils/lead'
+import { ISLASession, SceneID } from '@src/ts/ISLABot';
+import { Telegraf } from 'telegraf';
+import { BotContext } from '@src/ts/botContext';
+import { leadBot } from './utils/lead';
+import { pushResolver } from '@src/resolver';
 
 /**
  * Запуск бота: /start
  */
-const botStart = (bot: Telegraf<BotContext>, initialScene: SceneID, session: ISLASession) => {
+const botStart = (
+    bot: Telegraf<BotContext>,
+    initialScene: SceneID,
+    session: ISLASession
+) => {
     return bot.start(async (ctx: BotContext) => {
-
-        if(!ctx.session.agreement) {
+        if (!ctx.session.agreement) {
             ctx.session = {
                 _invitedUsers: [],
                 _subscribed: false,
                 _watchedTime: Date.parse(String(new Date())),
                 _rewardForInvitedUsers: 15,
+                _currentScene: '',
+                _currentScreen: '',
                 ...ctx.session,
                 ...ctx.from,
                 ...session,
@@ -40,11 +46,11 @@ const botStart = (bot: Telegraf<BotContext>, initialScene: SceneID, session: ISL
                 }
             }
 
-            ctx.session.agreement === true
+            ctx.session.agreement = true;
         }
 
-        await ctx.scene.enter(initialScene)
-    })
-}
+        await ctx.scene.enter(initialScene);
+    });
+};
 
-export default botStart
+export default botStart;

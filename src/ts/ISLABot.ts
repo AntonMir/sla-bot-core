@@ -1,80 +1,81 @@
 export interface ISLABot {
-    id: BotID
-    token: string
-    username: string
-    initialScene: SceneID
-    scenes: ScenesLike[]
-    locale: ISLALocale[]
-    scripts: ISLAScript[]
-    session: ISLASession
-    pushes: PushLike[]
-    flowTracking: any
-    channel: string
+    id: BotID;
+    token: string;
+    username: string;
+    initialScene: SceneID;
+    scenes: ScenesLike[];
+    locale: ISLALocale[];
+    scripts: ISLAScript[];
+    session: ISLASession;
+    pushes: PushLike[];
+    flowTracking: any;
+    channel: string;
 }
 
 export interface ISLAScript {
-    id: string
-    text: string
+    id: string;
+    text: string;
 }
 
-export type ScenesLike = ISLABaseScene
+export type ScenesLike = ISLABaseScene;
 
-export type PushLike = ISLABasePush
+export type PushLike = ISLABasePush;
 
-// export type ScreenLike = ISLAImageScreen 
-//                         | ISLAVideoScreen 
+// export type ScreenLike = ISLAImageScreen
+//                         | ISLAVideoScreen
 //                         | ISLAGifScreen
 //                         | ISLATextScreen
 //                         | ISLAHearScreen
 
-export type ScreenLike = ISLAScreenBase
+export type ScreenLike = ISLAScreenBase;
 
-export type PopupLike = ScreenLike
+export type PopupLike = ScreenLike;
 
-export type BotID = string
+export type BotID = string;
 
-export type SceneID = string
+export type SceneID = string;
 
-export type ScreenID = string
+export type ScreenID = string;
 
-export type PushID = string
+export type PushID = string;
 
-export type LocaleID = string
+export type LocaleID = string;
 
 export interface ISLASession {
-    [key: string]: any
+    [key: string]: any;
 }
 
 export interface ISLABaseScene {
-    id: LocaleID
-    initialScreen: ScreenID
-    screens: ScreenLike[]
-    popups?: PopupLike[]
+    id: LocaleID;
+    initialScreen: ScreenID;
+    screens: ScreenLike[];
+    popups?: PopupLike[];
 }
 
 export interface ISLABasePush extends ISLABaseScene {
-    timer: number
-    filter?: string[]
-    looping?: boolean
+    timer: number;
+    filter?: string[];
+    looping?: boolean;
+    condition?: string;
 }
 
 export interface ISLAButton {
-    text: LocaleID
-    action: string
+    text: LocaleID;
+    action: string;
 }
 
 export interface ISLAScreenBase {
-    id: ScreenID
-    buttons?: ISLAButton[][]
-    action?: string
-    buttonDelay?: number
-    text?: LocaleID
-    hears?: string
-    actionAfterHear?: LocaleID
-    image?: LocaleID
-    video?: LocaleID
-    gif?: LocaleID
-    caption?: LocaleID
+    id: ScreenID;
+    buttons?: ISLAButton[][];
+    action?: string;
+    buttonDelay?: number;
+    text?: LocaleID;
+    hears?: string;
+    actionAfterHear?: LocaleID;
+    image?: LocaleID;
+    video?: LocaleID;
+    gif?: LocaleID;
+    caption?: LocaleID;
 }
 
 // export interface ISLATextScreen extends ISLAScreenBase {
@@ -102,9 +103,8 @@ export interface ISLAScreenBase {
 // }
 
 export interface ISLALocale {
-    id: LocaleID
-    content?: string
-    contentArr?: string[]
-    formatted?: boolean
+    id: LocaleID;
+    content?: string;
+    contentArr?: string[];
+    formatted?: boolean;
 }
-

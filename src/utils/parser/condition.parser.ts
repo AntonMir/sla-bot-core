@@ -1,10 +1,10 @@
-import { ISLABot } from "@src/ts/ISLABot"
-import { BotContext } from "@src/ts/botContext"
+import { ISLABot } from '@src/ts/ISLABot';
+import { BotContext } from '@src/ts/botContext';
 
-type MathFunction = (a: number, b: number) => boolean
+type MathFunction = (a: number, b: number) => boolean;
 
-interface BooleanMathFunctions{
-    [key: string]: MathFunction,
+interface BooleanMathFunctions {
+    [key: string]: MathFunction;
 }
 
 class ConditionParser {
@@ -23,44 +23,45 @@ class ConditionParser {
 
     /**
      * Парсинг условий
+     * @param ctx
+     * @param bot
      * @param {string} expression `if 1 < 2`
      * @returns {boolean} true
      */
     parseBoolean(ctx: BotContext, bot: ISLABot, expression: string): boolean {
-        const script = expression.split(' ')
-        const firstVar: string = ctx.session[script[1]]
-        let secVar: boolean | number | string
+        const script = expression.split(' ');
+        const firstVar: string = ctx.session[script[1]];
+        let secVar: boolean | number | string;
 
-        if(['true', 'false'].includes(script[3])) {
-            secVar = !!script[3]
+        if (['true', 'false'].includes(script[3])) {
+            secVar = script[3] === 'true';
         }
 
-        if(!isNaN(+script[3])) {
-            secVar = +script[3]
+        if (!isNaN(+script[3])) {
+            secVar = +script[3];
         }
 
-        if(isNaN(+script[3]) && !['true', 'false'].includes(script[3])) {
-            secVar = ctx.session[script[3]]
+        if (isNaN(+script[3]) && !['true', 'false'].includes(script[3])) {
+            secVar = ctx.session[script[3]];
         }
 
-
-        switch(script[2]) {
+        switch (script[2]) {
             case '<':
-                return firstVar < secVar
+                return firstVar < secVar;
             case '>':
-                return firstVar > secVar
+                return firstVar > secVar;
             case '<=':
-                return firstVar <= secVar
+                return firstVar <= secVar;
             case '>=':
-                return firstVar >= secVar
+                return firstVar >= secVar;
             case '===':
-                return firstVar === secVar
+                return firstVar === secVar;
             case '==':
-                return firstVar == secVar
+                return firstVar == secVar;
             case '!=':
-                return firstVar != secVar
+                return firstVar != secVar;
             case '!==':
-                return firstVar !== secVar
+                return firstVar !== secVar;
         }
     }
 
@@ -78,4 +79,4 @@ class ConditionParser {
     // }
 }
 
-export default new ConditionParser()
+export default new ConditionParser();

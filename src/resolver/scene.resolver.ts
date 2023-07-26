@@ -1,12 +1,12 @@
-import { BotContext } from '@src/ts/botContext'
+import { BotContext } from '@src/ts/botContext';
 
 /**
  * Отрисовать сцену
- * @param {BotContext} Контекст
- * @param {string} ID сцены
+ * @param ctx
+ * @param sceneId
  */
-const sceneResolver = async (ctx: BotContext, scene_id: string) => {
-    await ctx.scene.enter(scene_id)
-}
+const sceneResolver = async (ctx: BotContext, sceneId: string) => {
+    await ctx.scene.enter(sceneId);
+};
 
-export default sceneResolver
+export default sceneResolver;

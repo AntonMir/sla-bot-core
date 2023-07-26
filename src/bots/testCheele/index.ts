@@ -6,7 +6,7 @@ export const testCheeleBot: ISLABot = {
     username: 'TestCheeleBot_Bot', // уникальный идентификатор бота (при создании)
     channel: `BLYr6965stNY56NNP`, // сохраненный через slaver канал (оставляем текущий)
 
-    initialScene: 'subs', // начальная сцена
+    initialScene: 'start', // начальная сцена
     flowTracking: true, // ВКЛ/ВЫКЛ логировани (оставляем не тронутым)
     locale: [
         {
