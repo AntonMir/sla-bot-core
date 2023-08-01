@@ -15,13 +15,6 @@ export const mongoConnetion = async () => {
         mongoOptions.proxyPassword = process.env.PROXY_PASSWORD;
     }
 
-    // await mongoose.connect(process.env.MONGO_URL, mongoOptions);
-    await mongoose.connect(
-        'mongodb+srv://r34anton:Qwerty12@slavercluster.ksjqo8m.mongodb.net/slaver-primary',
-        mongoOptions
-    );
-    logger.info(
-        'mongoose connected to ' +
-            'mongodb+srv://r34anton:Qwerty12@slavercluster.ksjqo8m.mongodb.net/slaver-primary'
-    );
+    await mongoose.connect(process.env.MONGO_URL, mongoOptions);
+    logger.info('mongoose connected to ' + process.env.MONGO_URL);
 };
