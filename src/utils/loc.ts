@@ -1,10 +1,10 @@
 import { BotContext } from '../ts/botContext';
-import { ISLABot } from '../ts/ISLABot';
+import { ISLABot, ISLASession } from '../ts/ISLABot';
 import Parser from './parser';
+import { Telegraf } from 'telegraf';
 
 const ResolvingErrorValue = '<b>*RESOLVING_ERROR*</b>';
 
-// TODO: изучить
 const localeFormatter = (
     txt: string,
     ctx: BotContext,
@@ -12,12 +12,10 @@ const localeFormatter = (
 ): string => {
     const regExp =
         /\{?([a-zA-Z_]*)\.*([a-zA-Z_]*) ?([0-9]*) ?(\+|\-*) ?([a-zA-Z_]*)\.*([a-zA-Z_]*) ?([0-9]*)}/g;
-
     const foundEntities = [...txt.matchAll(regExp)];
     const entities = [];
 
     for (const rawEntity of foundEntities) {
-        // console.log(`rawEntity`, rawEntity);
         const fullMatch = rawEntity[0];
         const namespace = rawEntity[1] || rawEntity[5];
         const firstVariable = rawEntity[2];
@@ -31,7 +29,7 @@ const localeFormatter = (
         if (namespace) {
             switch (namespace) {
                 case 'user': {
-                    value = ctx?.from?.[firstVariable];
+                    value = ctx?.session?.[firstVariable];
                     break;
                 }
                 case 'session': {
@@ -70,7 +68,7 @@ const localeFormatter = (
 
                     // РЕФЕРАЛЬНАЯ ССЫЛКА
                     if (firstVariable === '_referralLink') {
-                        value = `https://t.me/${ctx.botInfo.username}?start=${ctx.from.id}`;
+                        value = `https://t.me/${bot.username}?start=${ctx.session.id}`;
                         break;
                     }
 
@@ -91,7 +89,7 @@ const localeFormatter = (
                     }
                 }
                 case 'loc': {
-                    value = bot.locale.find(
+                    value = ctx.botObject.locale.find(
                         (el) => el.id === firstVariable
                     )?.content;
                     break;
@@ -123,7 +121,6 @@ const localeFormatter = (
     return resolvedText;
 };
 
-// TODO: изучить
 export const localeStorage = (bot: ISLABot) => {
     return (key: string, ctx: BotContext) => {
         const loc = bot.locale.find((el) => el.id === key);

@@ -18,7 +18,6 @@ const pushResolver = (bot: Telegraf<BotContext>) => {
             try {
                 // Get users List
                 const users = await findUsers(bot, push, {});
-
                 for (let user in users) {
                     // Проверка условия по сессии
                     if (push.condition && push.condition.length > 0) {
@@ -26,8 +25,6 @@ const pushResolver = (bot: Telegraf<BotContext>) => {
                             users[user].data,
                             push.condition
                         );
-
-                        console.log(`condition`, condition);
 
                         if (condition === undefined) {
                             console.error(
@@ -55,6 +52,8 @@ const pushResolver = (bot: Telegraf<BotContext>) => {
                             initPushScreen
                         ),
                     };
+
+                    bot.context.session = users[user].data;
 
                     // MESSAGE (PUSH) TO USER
                     const message = await bot.telegram.sendMessage(
@@ -175,15 +174,12 @@ async function findUsers(
  * Унифицированный таймер для пушей
  * - если время не указано, пуши идут раз в 1 мин.
  */
-function pushTimer(bot: Telegraf<BotContext>, num?: number | string): string {
+export function pushTimer(minutes?: number | string): string {
     try {
-        if (typeof num === 'number') {
-            return `*/${String(num)} * * * *`;
+        if (minutes) {
+            return `*/${minutes} * * * *`;
         }
-        if (typeof num === 'string') {
-            return `*/${bot.context.loc(num, bot.context)} * * * *`;
-        }
-        return `* * * * *`;
+        return `*/5 * * * *`;
     } catch (error) {
         console.error('Push Timer Error >>>', error);
     }

@@ -74,8 +74,6 @@ const screenResolver = async (
 
         // если есть кнопки и есть задержка
         if (screen.buttons && screen.buttons.length > 0 && screen.buttonDelay) {
-            console.log(`BTN`, textMessage.message_id);
-            console.log(`BTN@`, ctx.session.lastMessageId);
             await sleep(screen.buttonDelay * 1000);
             await ctx.telegram.editMessageReplyMarkup(
                 ctx.from.id,

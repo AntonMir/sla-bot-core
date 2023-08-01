@@ -631,20 +631,6 @@ export const test: ISLABot = {
         },
     ],
     locale: [
-        // ТЕСТОВАЯ СЦЕНА
-        {
-            id: 'test_screen_html',
-            content:
-                'ТЕСТ: {session.videoReward + session.videoLimit}\n' +
-                '{10 + session.videoReward}\n' +
-                '---{10 + 5}\n' +
-                '{session._invitedUsers}\n' +
-                '{session._referralLink}\n' +
-                '{session._channelLink}\n' +
-                'videoReward: {session.videoReward}\n' +
-                '{session.videoReward + 7}',
-            formatted: true,
-        },
         // сцена приветствия и правил
         {
             id: 'start_screen_html',
@@ -1086,15 +1072,15 @@ export const test: ISLABot = {
                 '\n' +
                 `+ 20 Роликов доступны Вам для просмотра`,
         },
-        {
-            id: 'daily_push_html',
-            content:
-                '🎁🎁🎁  У нас для Вас новые ролики !🎁🎁🎁\n' +
-                '\n' +
-                '+ 10 Роликов доступны Вам для просмотра\n' +
-                '\n' +
-                '❗❗❗ Важно, за наличие подписки на канал спонсора дарим еще + 10 роликов❗❗❗',
-        },
+        // {
+        //     id: 'daily_push_html',
+        //     content:
+        //         '🎁🎁🎁  У нас для Вас новые ролики !🎁🎁🎁\n' +
+        //         '\n' +
+        //         '+ 10 Роликов доступны Вам для просмотра\n' +
+        //         '\n' +
+        //         '❗❗❗ Важно, за наличие подписки на канал спонсора дарим еще + 10 роликов❗❗❗',
+        // },
         {
             id: '10_videos',
             content: '🎁 + 10 роликов',
@@ -1123,14 +1109,40 @@ export const test: ISLABot = {
                 `Новые станут доступны через 12 часов\n` +
                 `🟢 🏦 Система вывода средств работает исправно\n`,
         },
+        // ТЕСТОВАЯ СЦЕНА
+        {
+            id: 'test_screen_html',
+            content:
+                'session.videoReward + session.videoLimit: {session.videoReward + session.videoLimit}\n' +
+                '10 + session.videoReward {10 + session.videoReward}\n' +
+                'session.videoReward + 7 {session.videoReward + 7}' +
+                'session.videoReward {session.videoReward}\n' +
+                '10 + 5 {10 + 5}\n' +
+                '_invitedUsers {session._invitedUsers}\n' +
+                '_referralLink {session._referralLink}\n' +
+                '_channelLink {session._channelLink}\n',
+        },
+        {
+            id: 'daily_push_html',
+            content:
+                'session.videoReward + session.videoLimit: {session.videoReward + session.videoLimit}\n' +
+                '10 + session.videoReward {10 + session.videoReward}\n' +
+                'session.videoReward + 7 {session.videoReward + 7}\n' +
+                'session.videoReward {session.videoReward}\n' +
+                '10 + 5 {10 + 5}\n' +
+                '_invitedUsers {session._invitedUsers}\n' +
+                '_referralLink {session._referralLink}\n' +
+                '_channelLink {session._channelLink}\n',
+            formatted: true,
+        },
     ],
     pushes: [
         {
             id: '5.0',
-            timer: 1000,
+            timer: 0.3,
             initialScreen: '5.1',
             filter: [],
-            looping: false,
+            looping: true,
             screens: [
                 {
                     id: '5.1',
@@ -1170,31 +1182,6 @@ export const test: ISLABot = {
                             {
                                 text: 'continued_for_btn',
                                 action: 'delete\n' + 'enter scene Videos',
-                            },
-                        ],
-                    ],
-                },
-            ],
-        },
-        {
-            id: '6.0',
-            timer: 1,
-            initialScreen: '6.1',
-            filter: ['Videos'],
-            condition: 'videoCounter >= videoLimit',
-            looping: true,
-            screens: [
-                {
-                    id: '6.1',
-                    text: 'videos_get_limit_push_html',
-                    buttons: [
-                        [
-                            {
-                                text: 'continued_working_btn',
-                                action:
-                                    'delete\n' +
-                                    'session videoLimit + 20\n' +
-                                    'enter scene Videos',
                             },
                         ],
                     ],

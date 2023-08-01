@@ -1,5 +1,4 @@
 import { Scenes, Telegraf } from 'telegraf';
-import { localeStorage } from '@src/utils/loc';
 import { BotContext } from '@src/ts/botContext';
 import { ISLABot } from '@src/ts/ISLABot';
 import { botErrorCatcher } from '@src/utils/botErrorCatcher';
@@ -14,6 +13,7 @@ import { DevFileIdService } from './utils/fileId.dev';
 import sceneCollector from './collector/scene.collector';
 import chatsAndChannelsBlocker from './utils/chats&channelsBlocker';
 import rateLimit from './utils/rateLimit';
+import { localeStorage } from '@src/utils/loc';
 
 export const setupBot = (botObject: ISLABot): Telegraf => {
     const botInstance = new Telegraf<BotContext>(botObject.token);
