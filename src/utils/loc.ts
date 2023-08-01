@@ -12,8 +12,6 @@ const localeFormatter = (
 ): string => {
     const regExp =
         /\{?([a-zA-Z_]*)\.*([a-zA-Z_]*) ?([0-9]*) ?(\+|\-*) ?([a-zA-Z_]*)\.*([a-zA-Z_]*) ?([0-9]*)}/g;
-    // /\{?([0-9]*) ?(\+|\-*) ?(([a-zA-Z_]*)\.*([a-zA-Z_]*) ?(\+|\-*) ?([0-9]*))}/g;
-    // \{?([0-9]*) ?(\+|\-*) ?(([a-zA-Z_]*)\.*([a-zA-Z_]*) ?(\+|\-*) ?([0-9]*)) ?(([a-zA-Z_]*)\.*([a-zA-Z_]*) ?(\+|\-*)) ?([a-zA-Z_]*)\.*([a-zA-Z_]*)}
 
     const foundEntities = [...txt.matchAll(regExp)];
     const entities = [];
