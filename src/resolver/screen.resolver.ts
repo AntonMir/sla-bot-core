@@ -1,5 +1,6 @@
 import {
     ExtraAnimation,
+    ExtraPhoto,
     ExtraReplyMessage,
     ExtraVideo,
 } from 'telegraf/typings/telegram-types';
@@ -36,11 +37,11 @@ const screenResolver = async (
     } catch (e) {}
 
     await flow(ctx, screenId);
-    logger.info(`[${ctx.from.id}] enter screen ${screenId}`);
+    logger.info(`[${ctx.from.id}] ${action} screen ${screenId}`);
     const screen = screens.find((sc) => sc.id === screenId);
 
     if ('text' in screen) {
-        let extra: ExtraReplyMessage = {
+        let extra: any = {
             parse_mode: 'HTML',
         };
 
@@ -53,36 +54,39 @@ const screenResolver = async (
             extra.reply_markup = buttonResolver(ctx, screen);
         }
 
-        let message: any;
+        let textMessage: any;
 
         if (action === 'enter') {
             // отправим сообщение
-            message = await ctx.reply(ctx.loc(screen.text, ctx), extra);
+            textMessage = await ctx.reply(ctx.loc(screen.text, ctx), extra);
         }
 
         if (action === 'editTo') {
             // редактируем старое сообщение
-            message = await ctx.telegram.editMessageText(
-                ctx.from.id,
+            textMessage = await ctx.telegram.editMessageText(
+                ctx.chat.id,
                 ctx.session.lastMessageId,
                 undefined,
-                ctx.loc(screen.text, ctx)
+                ctx.loc(screen.text, ctx),
+                extra
             );
         }
 
         // если есть кнопки и есть задержка
         if (screen.buttons && screen.buttons.length > 0 && screen.buttonDelay) {
+            console.log(`BTN`, textMessage.message_id);
+            console.log(`BTN@`, ctx.session.lastMessageId);
             await sleep(screen.buttonDelay * 1000);
             await ctx.telegram.editMessageReplyMarkup(
                 ctx.from.id,
-                message.message_id,
+                textMessage.message_id,
                 undefined,
                 buttonResolver(ctx, screen)
             );
         }
 
         // сохраним номер последнего сообщения чтобы удалить при необходимости
-        ctx.session.lastMessageId = message.message_id;
+        ctx.session.lastMessageId = textMessage.message_id;
     }
 
     if ('video' in screen) {
@@ -92,8 +96,8 @@ const screenResolver = async (
 
         // если есть подпись под видео
         if (screen.caption && screen.caption.length > 0) {
-            (extra.caption = ctx.loc(screen.caption, ctx)),
-                (extra.parse_mode = 'HTML');
+            extra.caption = ctx.loc(screen.caption, ctx);
+            extra.parse_mode = 'HTML';
         }
 
         // если есть кнопки и нет задержки
@@ -121,6 +125,44 @@ const screenResolver = async (
 
         // фиксируем начало просмотра видео
         ctx.session.startWatching = Date.parse(String(new Date()));
+
+        // сохраним номер последнего сообщения чтобы удалить при необходимости
+        ctx.session.lastMessageId = message.message_id;
+    }
+
+    if ('image' in screen) {
+        let extra: ExtraPhoto = {};
+        const randomImg = mediaParser.getFileName(ctx, bot, screen.image);
+        const imgPath = await ctx.fileId.getFileId(randomImg);
+
+        // если есть подпись под картинкой
+        if (screen.caption && screen.caption.length > 0) {
+            extra.caption = ctx.loc(screen.caption, ctx);
+            extra.parse_mode = 'HTML';
+        }
+
+        // если есть кнопки и нет задержки
+        if (
+            screen.buttons &&
+            screen.buttons.length > 0 &&
+            !screen.buttonDelay
+        ) {
+            extra.reply_markup = buttonResolver(ctx, screen);
+        }
+
+        // отрисуем случайную картинку
+        let message = await ctx.replyWithPhoto(imgPath, extra);
+
+        // если есть кнопки и есть задержка
+        if (screen.buttons && screen.buttons.length > 0 && screen.buttonDelay) {
+            await sleep(screen.buttonDelay * 1000);
+            await ctx.telegram.editMessageReplyMarkup(
+                ctx.from.id,
+                message.message_id,
+                undefined,
+                buttonResolver(ctx, screen)
+            );
+        }
 
         // сохраним номер последнего сообщения чтобы удалить при необходимости
         ctx.session.lastMessageId = message.message_id;

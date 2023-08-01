@@ -1,5 +1,5 @@
 import { BotUsers } from '@src/db/models/botUser';
-import { ISLABasePush, ISLABot, PopupLike, PushLike } from '@src/ts/ISLABot';
+import { ISLABasePush } from '@src/ts/ISLABot';
 import { BotContext } from '@src/ts/botContext';
 import moment = require('moment');
 import { WithId } from 'mongodb';
@@ -7,6 +7,7 @@ import { AnyObject } from 'mongoose';
 import * as schedule from 'node-schedule';
 import { Telegraf } from 'telegraf';
 import { buttonResolver } from '@src/resolver';
+import Parser from '@src/utils/parser';
 
 /**
  * Парсинг пушей
@@ -19,20 +20,23 @@ const pushResolver = (bot: Telegraf<BotContext>) => {
                 const users = await findUsers(bot, push, {});
 
                 for (let user in users) {
-                    console.log(`user`, users[user]);
+                    // Проверка условия по сессии
+                    if (push.condition && push.condition.length > 0) {
+                        const condition = Parser.conditional.parseCondition(
+                            users[user].data,
+                            push.condition
+                        );
 
-                    // ПРОВЕРКА УСЛОВИЯ
-                    console.log(`push`, push.condition);
-                    //
-                    // const conditionStr = push.condition.split(' ');
-                    //
-                    // let firstCondVar = conditionStr[0];
-                    // let script = conditionStr[1];
-                    // let secondCondVar = conditionStr[2];
+                        console.log(`condition`, condition);
 
-                    // let conditionQueryParams: object = {
-                    //     `data.${firstCondVar}`:
-                    // };
+                        if (condition === undefined) {
+                            console.error(
+                                `Error push:[${push.id}] condition >>> \"${push.condition}\"`
+                            );
+                            return null;
+                        }
+                        if (condition === false) return null;
+                    }
 
                     // delete lastPush
                     const lastPushId: number = +users[user].data.lastPushId;

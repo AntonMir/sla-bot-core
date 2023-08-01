@@ -1,7 +1,7 @@
-import * as ohm from 'ohm-js'
+import * as ohm from 'ohm-js';
+import Parser from '@src/utils/parser/index';
 
 class ArithmeticParser {
-
     private _grammarArithmetic: ohm.Grammar = ohm.grammar(String.raw`
         Arithmetic {
             Program = Statement+
@@ -20,18 +20,18 @@ class ArithmeticParser {
             number = digit+
         }
     `);
-    private _semanticArithmetic = this._grammarArithmetic.createSemantics()
+    private _semanticArithmetic = this._grammarArithmetic.createSemantics();
     private _interpreterArithmetic = this._semanticArithmetic.addOperation(
-        "eval", 
+        'eval',
         {
             Program(statements) {
-                return statements.children[0].eval()
+                return statements.children[0].eval();
             },
 
             Statement(expression) {
-                return expression.eval()
+                return expression.eval();
             },
-        
+
             Exp_plus(left, _plus, right) {
                 return left.eval() + right.eval();
             },
@@ -48,7 +48,7 @@ class ArithmeticParser {
             Term_parens(_leftParen, expression, _rightParen) {
                 return expression.eval();
             },
-            
+
             number(digits) {
                 return Number(digits.sourceString);
             },
@@ -61,7 +61,7 @@ class ArithmeticParser {
      * @returns {Number} 3
      */
     parseStr(expression: string): number {
-        const match = this._grammarArithmetic.match(expression)
+        const match = this._grammarArithmetic.match(expression);
         if (match.failed()) {
             console.error(match.message);
         } else {
@@ -70,4 +70,4 @@ class ArithmeticParser {
     }
 }
 
-export default new ArithmeticParser()
+export default new ArithmeticParser();

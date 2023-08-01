@@ -10,7 +10,7 @@ export const tikTokBot: ISLABot = {
     session: {
         balance: 0,
         videoReward: 1,
-        videoLimit: 2,
+        videoLimit: 10,
         videoCounter: 0,
         agreement: false,
         paymentDetails: '',
@@ -1075,7 +1075,7 @@ export const tikTokBot: ISLABot = {
     pushes: [
         {
             id: '5.0',
-            timer: 2,
+            timer: 1000,
             initialScreen: '5.1',
             filter: [],
             looping: false,
@@ -1126,11 +1126,11 @@ export const tikTokBot: ISLABot = {
         },
         {
             id: '6.0',
-            timer: 0.1,
+            timer: 1,
             initialScreen: '6.1',
             filter: ['Videos'],
             condition: 'videoCounter >= videoLimit',
-            looping: false,
+            looping: true,
             screens: [
                 {
                     id: '6.1',
