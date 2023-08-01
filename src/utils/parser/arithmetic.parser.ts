@@ -63,7 +63,7 @@ class ArithmeticParser {
     parseStr(expression: string): number {
         const match = this._grammarArithmetic.match(expression);
         if (match.failed()) {
-            console.error(match.message);
+            console.error('MatchError>>>', match.message);
         } else {
             return this._interpreterArithmetic(match).eval();
         }

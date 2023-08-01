@@ -5,7 +5,7 @@ export const test: ISLABot = {
     token: '6137535708:AAGE80COePesM9I0X0lzy5Rtvw3w4ApDO38',
     channel: `BLYr6965stNY56NNP`,
     username: 'slaBotCore_bot',
-    initialScene: 'Videos',
+    initialScene: 'testScene',
     flowTracking: true,
     session: {
         balance: 0,
@@ -619,8 +619,32 @@ export const test: ISLABot = {
                 },
             ],
         },
+        {
+            id: 'testScene',
+            initialScreen: '123',
+            screens: [
+                {
+                    id: '123',
+                    text: 'test_screen_html',
+                },
+            ],
+        },
     ],
     locale: [
+        // ТЕСТОВАЯ СЦЕНА
+        {
+            id: 'test_screen_html',
+            content:
+                'ТЕСТ: {session.videoReward + session.videoLimit}\n' +
+                '{10 + session.videoReward}\n' +
+                '---{10 + 5}\n' +
+                '{session._invitedUsers}\n' +
+                '{session._referralLink}\n' +
+                '{session._channelLink}\n' +
+                'videoReward: {session.videoReward}\n' +
+                '{session.videoReward + 7}',
+            formatted: true,
+        },
         // сцена приветствия и правил
         {
             id: 'start_screen_html',
