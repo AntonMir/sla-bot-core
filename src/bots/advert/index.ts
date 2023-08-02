@@ -1,15 +1,11 @@
 import { ISLABot } from '@src/ts/ISLABot';
 
 export const advertBot: ISLABot = {
-    id: 'finalTestBot', // имя бота (при создании)
-    //id: 'advert-bot-core', // имя бота (при создании)
-    token: '5995710215:AAGjhQEnq_3pCaW2MpCskYqlv159WiZDrJQ', // токен бота
-    //token: '6429730795:AAGo4651cJCLwhtYaGnuXk-yIsNIma6iQtI', // токен бота
-    username: 'finalTestBot_bot', // уникальный идентификатор бота (при создании)
-    //username: 'advertBotCore_bot', // уникальный идентификатор бота (при создании)
-    channel: `BLYr6965stNY56NNP`, // сохраненный через slaver канал (оставляем текущий)
-
-    initialScene: 'start', // начальная сцена
+    id: 'sla-bot-core',
+    token: '6137535708:AAGE80COePesM9I0X0lzy5Rtvw3w4ApDO38',
+    channel: `BLYr6965stNY56NNP`,
+    username: 'slaBotCore_bot',
+    initialScene: 'start',
     flowTracking: true, // ВКЛ/ВЫКЛ логировани (оставляем не тронутым)
 
     // сессия - список переменных(с начальными значениями) для запоминания каких-то параметров
@@ -1289,10 +1285,10 @@ export const advertBot: ISLABot = {
         },
         {
             id: 'doublePrice',
-            timer: 0.5,
+            timer: 0.1,
             initialScreen: '8.0',
             filter: [],
-            looping: true,
+            looping: false,
             screens: [
                 {
                     id: '8.0',

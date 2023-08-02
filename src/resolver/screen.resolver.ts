@@ -31,7 +31,7 @@ const screenResolver = async (
 ) => {
     // сохраним последний отрисованный экран
     ctx.session._currentScreen = screenId;
-
+    console.log(`scene`, scene.id);
     try {
         await ctx.telegram.deleteMessage(ctx.from.id, ctx.session.lastPushId);
     } catch (e) {}

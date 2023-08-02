@@ -119,13 +119,15 @@ async function updateUser(
             };
         } catch (error) {}
     }
-    await BotUsers.updateOne(
+    const update = await BotUsers.updateOne(
         {
             id: user.id,
             bot: bot.context.botObject.id,
         },
         updateUserParams
     );
+
+    console.log(`update`, update);
 }
 
 /**
