@@ -14,6 +14,8 @@ import sceneCollector from './collector/scene.collector';
 import chatsAndChannelsBlocker from './utils/chats&channelsBlocker';
 import rateLimit from './utils/rateLimit';
 import { localeStorage } from '@src/utils/loc';
+import * as path from 'path';
+import * as fs from 'fs';
 
 export const setupBot = (botObject: ISLABot): Telegraf => {
     const botInstance = new Telegraf<BotContext>(botObject.token);
@@ -25,6 +27,10 @@ export const setupBot = (botObject: ISLABot): Telegraf => {
         ctx.session = { __scenes: {} };
         await BotUsers.deleteOne({ id: ctx.from.id, bot: botObject.id });
         ctx.reply('Bot has been restarted. /start');
+    });
+
+    botInstance.command('getFilesList', async (ctx, next) => {
+        console.log(fs.readdirSync(path.join(process.cwd(), 'assets')));
     });
 
     // Subscribe tracker
