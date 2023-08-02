@@ -10,7 +10,7 @@ import { mongoConnetion } from './db/db.connect';
 // Пример:
 // import { имяТвоегоБота } '@src/bots/имяПапкиТвоегоБота'
 // import { exampleBot } from '@src/bots/example'
-import { test } from '@src/bots/test';
+import { advertBot } from '@src/bots/advert';
 
 // ----------------- не трогать ------------------
 mongoConnetion();
@@ -22,6 +22,6 @@ mongoConnetion();
 // setupBot(имяТвоегоБота).launch({
 //     allowedUpdates: ['message', 'callback_query', 'chat_member'],
 // })
-setupBot(test).launch({
+setupBot(advertBot).launch({
     allowedUpdates: ['message', 'callback_query', 'chat_member'],
 });

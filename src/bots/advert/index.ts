@@ -1,23 +1,21 @@
 import { ISLABot } from '@src/ts/ISLABot';
-import { triggerAsyncId } from 'async_hooks';
-import { button } from 'telegraf/typings/markup';
 
-export const finalTestBot: ISLABot = {
-    // id: 'finalTestBot', // имя бота (при создании)
-    id: 'advert-bot-core', // имя бота (при создании)
-    // token: '5995710215:AAGjhQEnq_3pCaW2MpCskYqlv159WiZDrJQ', // токен бота
-    token: '6429730795:AAGo4651cJCLwhtYaGnuXk-yIsNIma6iQtI', // токен бота
-    // username: 'finalTestBot_bot', // уникальный идентификатор бота (при создании)
-    username: 'advertBotCore_bot', // уникальный идентификатор бота (при создании)
+export const advertBot: ISLABot = {
+    id: 'finalTestBot', // имя бота (при создании)
+    //id: 'advert-bot-core', // имя бота (при создании)
+    token: '5995710215:AAGjhQEnq_3pCaW2MpCskYqlv159WiZDrJQ', // токен бота
+    //token: '6429730795:AAGo4651cJCLwhtYaGnuXk-yIsNIma6iQtI', // токен бота
+    username: 'finalTestBot_bot', // уникальный идентификатор бота (при создании)
+    //username: 'advertBotCore_bot', // уникальный идентификатор бота (при создании)
     channel: `BLYr6965stNY56NNP`, // сохраненный через slaver канал (оставляем текущий)
 
-    initialScene: 'videos', // начальная сцена
+    initialScene: 'start', // начальная сцена
     flowTracking: true, // ВКЛ/ВЫКЛ логировани (оставляем не тронутым)
 
     // сессия - список переменных(с начальными значениями) для запоминания каких-то параметров
     // к примеру запоминаем баланс пользователя для дальнейшего изменения через скрипты
     session: {
-        balance: 520,
+        balance: 0,
         videoReward: 1,
         videoLimit: 10,
         videoCounter: 0,
@@ -55,7 +53,7 @@ export const finalTestBot: ISLABot = {
             id: 'enter_screen_3.2',
             text:
                 `session videoCounter + 1\n` +
-                `session balance + videoReward\n` +
+                `session balance + 1\n` +
                 'delete\n' +
                 'enter screen 3.2',
         },
@@ -95,7 +93,7 @@ export const finalTestBot: ISLABot = {
             text:
                 'if videoCounter === 7\n' +
                 'run script enter_screen_3.4\n' +
-                'run script enter_screen_3.1',
+                'run script 20_video-watch-conditional',
         },
         {
             id: 'enter_screen_3.4',
@@ -108,7 +106,7 @@ export const finalTestBot: ISLABot = {
         {
             id: '20_video-watch-conditional',
             text:
-                'if videoCounter >= 20\n' +
+                'if videoCounter >= videoLimit\n' +
                 'run script enter_screen_3.5\n' +
                 'run script enter_screen_3.1',
         },
@@ -173,6 +171,23 @@ export const finalTestBot: ISLABot = {
         {
             id: 'enter_screen_2.4',
             text: 'delete\n' + 'enter screen 2.4',
+        },
+        {
+            id: 'check_subs_on_push',
+            text:
+                'if _subscribed === true\n' +
+                'run script goToRewardx2\n' +
+                'enter popup 8.2.1\n',
+        },
+        {
+            id: 'goToRewardx2',
+            text: 'session videoReward * 2\n' + 'delete\n' + 'enter screen 8.2',
+        },
+        // лимит видео +10
+        {
+            id: 'plus_10_videos',
+            text:
+                'session videoLimit + 10\n' + 'delete\n' + 'enter screen 3.4.2',
         },
     ],
 
@@ -387,7 +402,7 @@ export const finalTestBot: ISLABot = {
                         [
                             {
                                 text: 'if_subscribed_yet_btn',
-                                action: 'delete\n' + 'enter screen 3.4.2',
+                                action: 'run script plus_10_videos',
                             },
                         ],
                         [
@@ -853,7 +868,6 @@ export const finalTestBot: ISLABot = {
         {
             id: 'if_subscribed_html',
             content:
-                '🔓\n' +
                 '🎁🎁🎁 +20 € 🎁🎁🎁\n' +
                 'Теперь Вы можете перейти к основному заработку\n' +
                 '\n' +
@@ -884,7 +898,7 @@ export const finalTestBot: ISLABot = {
                 '💵 💵 💵 +1 € 💵 💵 💵 \n' +
                 '💰 Баланс: {session.balance}€\n' +
                 '\n' +
-                'Вам доступно еще {10 - session.videoCounter} рекламных роликов\n' +
+                'Вам доступно еще {session.videoLimit - session.videoCounter} рекламных роликов\n' +
                 '\n' +
                 '🎁🎁🎁 Еще {3 - session.videoCounter} видео до бонуса 🎁🎁🎁',
             formatted: true,
@@ -895,7 +909,7 @@ export const finalTestBot: ISLABot = {
                 '💵 💵 💵 +1 € 💵 💵 💵 \n' +
                 '💰 Баланс: {session.balance}€\n' +
                 '\n' +
-                'Вам доступно еще {10 - session.videoCounter} рекламных роликов\n',
+                'Вам доступно еще {session.videoLimit - session.videoCounter} рекламных роликов\n',
             formatted: true,
         },
         {
@@ -904,7 +918,7 @@ export const finalTestBot: ISLABot = {
                 '💵 💵 💵 +1 € 💵 💵 💵 \n' +
                 '💰 Баланс: {session.balance}€\n' +
                 '\n' +
-                'Вам доступно еще {10 - session.videoCounter} рекламных роликов',
+                'Вам доступно еще {session.videoLimit - session.videoCounter} рекламных роликов',
             formatted: true,
         },
         {
@@ -913,12 +927,12 @@ export const finalTestBot: ISLABot = {
                 '💵 💵 💵 +1 € 💵 💵 💵 \n' +
                 '💰 Баланс: {session.balance}€\n' +
                 '\n' +
-                'Вам доступно еще {20 - session.videoCounter} рекламных роликов',
+                'Доступно рекламных роликов еще: {session.videoLimit - session.videoCounter}',
             formatted: true,
         },
         {
             id: 'get_for_3_videos_bonus_btn',
-            content: '🎁 🎁🎁 Жми, чтобы забрать бонус 🎁🎁🎁',
+            content: '🎁 🎁🎁 Забрать бонус 🎁🎁🎁',
         },
         {
             id: 'next_video_btn',
@@ -970,7 +984,7 @@ export const finalTestBot: ISLABot = {
         },
         {
             id: 'if_subscribed_yet_btn',
-            content: 'Я уже подписчик\n' + '+10 роликов',
+            content: 'Я уже подписчик\n' + ' +10 роликов',
         },
         {
             id: 'get_more_videos_html',
@@ -1181,12 +1195,35 @@ export const finalTestBot: ISLABot = {
             id: 'double_price_btn',
             content: 'Двойная ставка',
         },
+        {
+            id: 'continued_watching_push_btn',
+            content: 'Продолжить просмотр',
+        },
+        {
+            id: 'double_price_html',
+            content:
+                '⚠️⚠️⚠️ Двойнай ставка +2€ за просмотр ролика, при наличии подписки на {session._channelLink} ⚠️⚠️⚠️',
+            formatted: true,
+        },
+        {
+            id: '111111after_20_videos_push_html',
+            content: `<pre>
+           🔓 
+ 🎁🎁🎁 Теперь Вы будете
+  получать по 2€ 🎁🎁🎁
+     за каждый ролик
+                   </pre>`,
+        },
+        {
+            id: 'after_20_videos_push_html',
+            content: `XYЙ`,
+        },
     ],
     pushes: [
         // +3к к балансу где должны быть
         {
             id: 'stopWatchingVideos',
-            timer: 10,
+            timer: 320,
             initialScreen: '6.0',
             filter: ['videos'],
             looping: true,
@@ -1219,7 +1256,7 @@ export const finalTestBot: ISLABot = {
         },
         {
             id: 'outOfRegistration',
-            timer: 1,
+            timer: 5,
             initialScreen: '7.0',
             filter: ['payout'],
             looping: true,
@@ -1252,7 +1289,7 @@ export const finalTestBot: ISLABot = {
         },
         {
             id: 'doublePrice',
-            timer: 20,
+            timer: 0.5,
             initialScreen: '8.0',
             filter: [],
             looping: true,
@@ -1264,7 +1301,7 @@ export const finalTestBot: ISLABot = {
                         [
                             {
                                 text: 'double_price_btn',
-                                action: 'delete\n' + 'enter scene menu',
+                                action: 'run script check_subs_on_push',
                             },
                         ],
                         [
@@ -1280,6 +1317,24 @@ export const finalTestBot: ISLABot = {
                             },
                         ],
                     ],
+                },
+                {
+                    id: '8.2',
+                    text: 'after_20_videos_push_html',
+                    buttons: [
+                        [
+                            {
+                                text: 'continued_watching_push_btn',
+                                action: 'delete\n' + 'enter scene videos',
+                            },
+                        ],
+                    ],
+                },
+            ],
+            popups: [
+                {
+                    id: '8.2.1',
+                    text: 'error_popup',
                 },
             ],
         },
